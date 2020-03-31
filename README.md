@@ -1,11 +1,9 @@
 ## first thing you should do is to create af file `.env` in the root of the project with this content
 
-DB_URI=REPLACE_WITH_YOUR_DATABASE_CONNECTION_STRING
+CONNECTION=YOUR_CONNECTION_STRING_TO_ATLAS
 
-DB_TEST_URI=REPLACE_WITH_YOUR_DATABASE_CONNECTION_STRING
+DB_NAME=semester_case
+DEBUG=game-project
 
-DB_DEV=dev_game
+PORT=5000
 
-DB_TEST=test_game
-
-PORT=5555

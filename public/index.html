@@ -10,7 +10,22 @@
 <body>
   <h2>API-documentation for semester project</h2>
   <a href="/api/dummy">Use Dummy API</a>
-
+  <ul id="ul"></ul>
+  <button id="btn">Fecth all</button>
+  <script >
+    const options = {
+      method: "GET",
+      credentials:"same-origin",
+      headers : {"Accept": "application/json"}
+    }
+    document.getElementById("btn").onclick = function(){
+      fetch("/api/users",options).then(res=>res.json())
+      .then(data=>{
+        const lis = data.map(user=> `<li>${user.name}, ${user.userName} </li>` )
+        document.getElementById("ul").innerHTML = lis.join("");
+      })
+    }
+  </script>
 </body>
 
 </html>
