@@ -5,8 +5,6 @@ const router = express.Router();
 import { ApiError } from "../errors/apiError"
 import authMiddleware from "../middlewares/basic-auth";
 
-
-
 router.post('/', async function (req, res, next) {
   try {
     let newUser = req.body;
@@ -18,9 +16,7 @@ router.post('/', async function (req, res, next) {
   }
 })
 
-
 router.use(authMiddleware)
-
 
 router.get('/:userName', async function (req: any, res, next) {
   try {
@@ -55,7 +51,6 @@ router.get('/:userName', async function (req: any, res, next) {
 
 router.get('/', async function (req: any, res, next) {
   try {
-   
       const role = req.role;
       if (role != "admin") {
         throw new ApiError("Not Authorized", 403)

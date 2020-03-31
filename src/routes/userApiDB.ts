@@ -1,15 +1,14 @@
+require('dotenv').config();
 import express from "express";
 import userFacade from "../facades/userFacadeWithDB";
-import basicAuth from "../middlewares/basic-auth"
 const router = express.Router();
-import { ApiError } from "../errors/apiError"
+import { ApiError } from "../errors/apiError";
 import authMiddleware from "../middlewares/basic-auth";
-import * as mongo from "mongodb"
-import setup from "../config/setupDB"
+import * as mongo from "mongodb";
+import setup from "../config/setupDB";
 const MongoClient = mongo.MongoClient;
 
-
-const USE_AUTHENTICATION = false;
+const USE_AUTHENTICATION : boolean = Boolean(process.env.USE_AUTHENTICATION);
 
 (async function setupDB() {
     const client = await setup()
@@ -31,6 +30,7 @@ router.post('/', async function (req, res, next) {
 if (USE_AUTHENTICATION) {
     router.use(authMiddleware)
 }
+
 router.get('/:userName', async function (req: any, res, next) {
     try {
         if (USE_AUTHENTICATION) {
