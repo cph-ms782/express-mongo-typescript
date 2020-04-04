@@ -1,4 +1,3 @@
-
 import path from "path";
 require('dotenv').config({ path: path.join(process.cwd(), '.env') })
 import { expect } from "chai";
@@ -8,23 +7,21 @@ import mongo, { MongoClient } from "mongodb";
 import { bryptAsync } from "../src/utils/bcrypt-async-helper"
 import setup from "../src/config/setupDB"
 import { ApiError } from '../src/errors/apiError';
-import { positionCreator, getLatitudeInside, getLatitudeOutside } from "../src/utils/geoUtils"
 import { USER_COLLECTION_NAME, POSITION_COLLECTION_NAME } from "../src/config/collectionNames"
+import { positionCreator, getLatitudeInside, getLatitudeOutside } from "../src/utils/geoUtils"
 
 let server: Server;
-const TEST_PORT = "7777"
+const TEST_PORT = "7778"
 let client: MongoClient;
+
 const DISTANCE_TO_SEARCH = 100
 const MOCHA_TIMEOUT = 5000;
 
-describe("Verify endpoints", () => {
+describe("verify all endpoints", () => {
   let URL: string;
 
-
-  //IMPORTANT --> this does now work with Mocha for ARROW-functions
   before(async function () {
 
-    //@ts-ignore
     this.timeout(MOCHA_TIMEOUT)
 
     process.env["PORT"] = TEST_PORT;
@@ -32,19 +29,22 @@ describe("Verify endpoints", () => {
 
     server = await require("../src/app").server;
     URL = `http://localhost:${process.env.PORT}`;
+
     client = await setup();
-    //This is not required. The server connects to the DB via the use of the facade
-    //await client.connect();
   })
 
   beforeEach(async () => {
     //Observe, no use of facade, but operates directly on connection
-    // client = await setup();
-    // await client.connect();
     const db = client.db(process.env.DB_NAME)
     const usersCollection = db.collection(USER_COLLECTION_NAME)
     await usersCollection.deleteMany({})
     const secretHashed = await bryptAsync("secret");
+    // const status = await usersCollection.insertMany([
+    //   { name: "Peter Pan", userName: "pp@b.dk", password: secretHashed, role: "user" },
+    //   { name: "Donald Duck", userName: "dd@b.dk", password: secretHashed, role: "user" },
+    //   { name: "admin", userName: "admin@a.dk", password: secretHashed, role: "admin" }
+    // ])
+
     const team1 = { name: "Team1", userName: "t1", password: secretHashed, role: "team" }
     const team2 = { name: "Team2", userName: "t2", password: secretHashed, role: "team" }
     const team3 = { name: "Team3", userName: "t3", password: secretHashed, role: "team" }
@@ -61,12 +61,74 @@ describe("Verify endpoints", () => {
       positionCreator(12.48, getLatitudeOutside(55.77, DISTANCE_TO_SEARCH), team3.userName, team3.name, true),
     ]
     const locations = await positionsCollection.insertMany(positions)
+
   })
 
   after(async () => {
     server.close();
     await client.close();
   })
+
+/**
+ * USER endpoints
+ */
+
+  it("Should get the message Hello api", async () => {
+    const result = await fetch(`${URL}/api/dummy`).then(r => r.json());
+    expect(result.msg).to.be.equal("Hello api")
+  })
+
+  it("Should get three users", async () => {
+    const result = await fetch(`${URL}/api/users`).then(r => r.json());
+    expect(result.length).to.be.equal(3)
+  })
+
+  it("Should Add the user Jan", async () => {
+    const newUser = { name: "Jan Olsen", userName: "jo@b.dk", password: "secret", role: "user" }
+    const config = {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(newUser)
+    }
+    const result = await fetch(`${URL}/api/users`, config).then(r => r.json());
+    expect(result.status).to.be.equal("User was added")
+  })
+
+  it("Should find the user t1", async () => {
+    const result = await fetch(`${URL}/api/users/t1`).then(r => r.json());
+    expect(result.name).to.be.equal("Team1")
+
+  })
+
+  it("Should not find the user xxx@b.dk", async () => {
+    try {
+      const result = await fetch(`${URL}/api/users/xxx@b.dk`).then(r => r.json());
+      expect(result.name).not.to.be.equal("Donald Duck")
+    }
+    catch (err) {
+      expect(err instanceof ApiError).to.be.equal(true)
+      expect(err.message).to.be.equal("User not found")
+    }
+  })
+
+  it("Should Remove the user t1", async () => {
+    const config = {
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    }
+    const result = await fetch(`${URL}/api/users/t1`, config).then(r => r.json());
+    expect(result.status).to.be.equal("user deleted")
+  })
+
+/**
+ * GAME endpoints
+ */
 
   it("Should find gameapi", async function () {
     const result = await fetch(`${URL}/gameapi/dummy`)
@@ -146,5 +208,5 @@ describe("Verify endpoints", () => {
       console.log("XXXXXXXXXXXXXHHHHHHHHHHHHHHHHHHH")
     }
   })
-
+  
 })

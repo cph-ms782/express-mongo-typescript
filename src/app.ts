@@ -37,7 +37,7 @@ app.use(function (req, res, next) {
   next();
 });
 app.use(function (req, res, next) {
-  if (req.originalUrl.startsWith("/geoapi")) {
+  if (req.originalUrl.startsWith("/gameapi")) {
     res.status(404).json({ code: 404, msg: "this API does not contain this endpoint" })
   }
   next();
