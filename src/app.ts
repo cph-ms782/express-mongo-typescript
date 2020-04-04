@@ -1,6 +1,7 @@
-// npm i @types/node
-// npm install geojson-utils helmet
-// npm install helmet --save
+// npm i @types/node @types/winston
+// npm install @types/node-fetch @types/node @types/mongodb @types/bcryptjs @types/chai @types/express @types/mocha --save-dev
+// npm install chai mocha node-fetch nodemon ts-node --save-dev
+// npm install winston tsscmp mongodb geojson-utils express express-winston basic-auth helmet bcryptjs concurrently dotenv debug typescript  --save
 
 require('dotenv').config();
 import express from "express";
