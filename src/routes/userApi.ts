@@ -5,6 +5,9 @@ const router = express.Router();
 import { ApiError } from "../errors/apiError"
 import authMiddleware from "../middlewares/basic-auth";
 
+/**
+ * login with auth
+ */
 router.post('/', async function (req, res, next) {
   try {
     let newUser = req.body;
@@ -18,6 +21,9 @@ router.post('/', async function (req, res, next) {
 
 router.use(authMiddleware)
 
+/**
+ * 
+ */
 router.get('/:userName', async function (req: any, res, next) {
   try {
     const role = req.role;
@@ -34,28 +40,31 @@ router.get('/:userName', async function (req: any, res, next) {
   }
 });
 
+/**
+ * 
+ */
+router.get('/user/me', async function (req: any, res, next) {
+  try {
+    const user_Name = req.userName;
+    const user = await userFacade.getUser(user_Name);
+    const { name, userName } = user;
+    const userDTO = { name, userName }
+    res.json(userDTO);
+  } catch (err) {
+    next(err)
+  }
+});
 
-  router.get('/user/me', async function (req: any, res, next) {
-    try {
-      const user_Name = req.userName;
-      const user = await userFacade.getUser(user_Name);
-      const { name, userName } = user;
-      const userDTO = { name, userName }
-      res.json(userDTO);
-    } catch (err) {
-      next(err)
-    }
-  });
-
-
-
+/**
+ * 
+ */
 router.get('/', async function (req: any, res, next) {
   try {
-      const role = req.role;
-      if (role != "admin") {
-        throw new ApiError("Not Authorized", 403)
-      }
-    
+    const role = req.role;
+    if (role != "admin") {
+      throw new ApiError("Not Authorized", 403)
+    }
+
     const users = await userFacade.getAllUsers();
     const usersDTO = users.map((user) => {
       const { name, userName } = user;
@@ -67,14 +76,17 @@ router.get('/', async function (req: any, res, next) {
   }
 });
 
+/**
+ * 
+ */
 router.delete('/:userName', async function (req: any, res, next) {
   try {
-   
-      const role = req.role;
-      if (role != "admin") {
-        throw new ApiError("Not Authorized", 403)
-      }
-   
+
+    const role = req.role;
+    if (role != "admin") {
+      throw new ApiError("Not Authorized", 403)
+    }
+
     const user_name = req.params.userName;
     const status = await userFacade.deleteUser(user_name)
     res.json({ status })

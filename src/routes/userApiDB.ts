@@ -15,7 +15,9 @@ const USE_AUTHENTICATION : boolean = Boolean(process.env.USE_AUTHENTICATION);
     userFacade.setDatabase(client)
 })()
 
-
+/**
+ * login without auth
+ */
 router.post('/', async function (req, res, next) {
     try {
         let newUser = req.body;
@@ -31,6 +33,9 @@ if (USE_AUTHENTICATION) {
     router.use(authMiddleware)
 }
 
+/**
+ * 
+ */
 router.get('/:userName', async function (req: any, res, next) {
     try {
         if (USE_AUTHENTICATION) {
@@ -49,6 +54,9 @@ router.get('/:userName', async function (req: any, res, next) {
     }
 });
 
+/**
+ * 
+ */
 if (USE_AUTHENTICATION) {
     router.get('/user/me', async function (req: any, res, next) {
         try {
@@ -63,7 +71,9 @@ if (USE_AUTHENTICATION) {
     });
 }
 
-
+/**
+ * 
+ */
 router.get('/', async function (req: any, res, next) {
     try {
         if (USE_AUTHENTICATION) {
@@ -83,6 +93,9 @@ router.get('/', async function (req: any, res, next) {
     }
 });
 
+/**
+ * 
+ */
 router.delete('/:userName', async function (req: any, res, next) {
     try {
         if (USE_AUTHENTICATION) {
