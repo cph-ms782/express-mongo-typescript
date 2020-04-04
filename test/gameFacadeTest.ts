@@ -30,8 +30,8 @@ describe("Verify the GameFacade", () => {
     positionCollection = db.collection(POSITION_COLLECTION_NAME)
     postCollection = db.collection(POST_COLLECTION_NAME);
 
-    if (userCollection === null || positionCollection === null) {
-      throw new Error("user and/or location- collection not initialized")
+    if (userCollection === null || positionCollection === null || postCollection === null) {
+      throw new Error("user, post and/or location- collection not initialized")
     }
 
   })
@@ -59,12 +59,11 @@ describe("Verify the GameFacade", () => {
     ]
     await positionCollection.insertMany(positions)
 
-    //Only include this if you plan to do this part 
     await postCollection.deleteMany({})
     await postCollection.insertOne({
       _id: "Post1",
-      task: { text: "1+1", isUrl: false },
-      taskSolution: "2",
+      task: { text: "2+5", isUrl: false },
+      taskSolution: "7",
       location: {
         type: "Point",
         coordinates: [12.49, 55.77]
@@ -100,13 +99,30 @@ describe("Verify the GameFacade", () => {
     })
   })
 
+  /**
+   Response JSON (if found):
+    {"postId":"post1", "task": "2+5", isUrl:false}
+ * 
+ */
   describe("Verify getPostIfReached", () => {
-    xit("Should find the post since it was reached", async () => {
-      //TODO
+    it("Should find the post since it was reached", async () => {
+      const postFound = await GameFacade.getPostIfReached("Post1", 12.49, 55.77)
+      expect(postFound.postId).to.be.equal("Post1")
+      expect(postFound.task).to.be.equal("2+5")
     })
 
-    xit("Should NOT find the post since it was NOT reached", async () => {
-      //TODO
+    /**
+    Response JSON (if not reached):
+      {message: "Post not reached", code: 400} (StatusCode = 400)
+   */
+    it("Should NOT find the post since it was NOT reached", async () => {
+      try {
+        await GameFacade.getPostIfReached("Post1", 13, 15)
+      } catch (err) {
+        expect(err instanceof ApiError).to.be.equal(true)
+        expect(err.message).to.be.equal("Post not reached")
+        expect(err.errorCode).to.be.equal(400)
+      }
     })
   })
 })

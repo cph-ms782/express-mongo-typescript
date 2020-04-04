@@ -9,6 +9,7 @@ import setup from "../config/setupDB";
 const MongoClient = mongo.MongoClient;
 import { gameArea } from "../data/gameData";
 import { players } from "../data/gameData";
+import IPost from "../interfaces/Post";
 
 const USE_AUTHENTICATION: boolean = Boolean(process.env.USE_AUTHENTICATION);
 
@@ -36,8 +37,8 @@ router.get('/findnearbyplayers/:lon/:lat/:rad', async (req: any, res: any, next:
             ]
         };
         const foundPlayers: any[] = await gameFacade.geometryWithinRadius(
-            userGeometry, 
-            Number(req.params.rad), 
+            userGeometry,
+            Number(req.params.rad),
             players);
         return res.json(foundPlayers);
     } catch (err) {
@@ -50,16 +51,14 @@ router.get('/findnearbyplayers/:lon/:lat/:rad', async (req: any, res: any, next:
  */
 router.post('/nearbyplayers', async (req: any, res: any, next: any) => {
     try {
-        // if (USE_AUTHENTICATION) {
-            const foundPlayers: any[] = await gameFacade.nearbyPlayers(
-                req.body.userName, 
-                req.body.password, 
-                req.body.lon, 
-                req.body.lat, 
-                req.body.distance
-                );
-            return res.json(foundPlayers);
-        // }
+        const foundPlayers: any[] = await gameFacade.nearbyPlayers(
+            req.body.userName,
+            req.body.password,
+            req.body.lon,
+            req.body.lat,
+            req.body.distance
+        );
+        return res.json(foundPlayers);
     } catch (err) {
         next(err);
     }
@@ -98,22 +97,44 @@ router.get('/distancetouser/:lon/:lat/:username', async (req: any, res: any, nex
  */
 router.get('/isuserinarea/:lon/:lat', async (req: any, res: any, next: any) => {
     try {
-        const point: any = await gameFacade.makePoint(Number(req.params.lon), Number(req.params.lat));
-        const inside: any = await gameFacade.pointInPolygon(point, gameArea);
-        if (inside) {
+        if (USE_AUTHENTICATION) {
+            const point: any = await gameFacade.makePoint(Number(req.params.lon), Number(req.params.lat));
+            const inside: any = await gameFacade.pointInPolygon(point, gameArea);
+            if (inside) {
+                return res.json({
+                    status: true,
+                    msg: 'Point was inside the tested polygon'
+                });
+            }
             return res.json({
-                status: true,
-                msg: 'Point was inside the tested polygon'
+                status: false,
+                msg: 'Point was NOT inside tested polygon'
             });
         }
-        return res.json({
-            status: false,
-            msg: 'Point was NOT inside tested polygon'
-        });
     } catch (err) {
         next(err);
     }
 });
 
+/**
+    Request JSON: 
+        {"postId":"post1", "lat":3, "lon": 5}
+    Response JSON (if found):
+        {"postId":"post1", "task": "2+5", isUrl:false}
+    Response JSON (if not reached):
+        {message: "Post not reached", code: 400} (StatusCode = 400)
+ */
+router.post('/getpostifreached', async (req: any, res: any, next: any) => {
+    try {
+        const post: IPost = await gameFacade.getPostIfReached(
+            req.body.postId,
+            req.body.lon,
+            req.body.lat
+        )
+        return res.json(post)
+    } catch (err) {
+        next(err);
+    }
+});
 
 module.exports = router;

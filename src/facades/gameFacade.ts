@@ -115,8 +115,8 @@ export default class GameFacade {
             const formatted: any[] = foundPlayers.map((player) => {
                 return {
                     userName: player.userName,
-                    lat: player.lat,
-                    lon: player.lon,
+                    lon: player.location.coordinates[0],
+                    lat: player.location.coordinates[1],
                 }
             })
             return formatted;
@@ -183,7 +183,7 @@ export default class GameFacade {
      * @param lat 
      * @param lon 
      */
-    static async getPostIfReached(postId: string, lat: number, lon: number): Promise<any> {
+    static async getPostIfReached(postId: string, lon: number, lat: number): Promise<any> {
         const postGeometry: any = {
             type: "Point",
             coordinates: [

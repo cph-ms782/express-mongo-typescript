@@ -7,8 +7,13 @@ import mongo, { MongoClient } from "mongodb";
 import { bryptAsync } from "../src/utils/bcrypt-async-helper"
 import setup from "../src/config/setupDB"
 import { ApiError } from '../src/errors/apiError';
-import { USER_COLLECTION_NAME, POSITION_COLLECTION_NAME } from "../src/config/collectionNames"
+import { USER_COLLECTION_NAME, POSITION_COLLECTION_NAME, POST_COLLECTION_NAME } from "../src/config/collectionNames"
 import { positionCreator, getLatitudeInside, getLatitudeOutside } from "../src/utils/geoUtils"
+
+
+let userCollection: mongo.Collection | null;
+let positionCollection: mongo.Collection | null;
+let postCollection: mongo.Collection | null;
 
 let server: Server;
 const TEST_PORT = "7778"
@@ -39,11 +44,6 @@ describe("verify all endpoints", () => {
     const usersCollection = db.collection(USER_COLLECTION_NAME)
     await usersCollection.deleteMany({})
     const secretHashed = await bryptAsync("secret");
-    // const status = await usersCollection.insertMany([
-    //   { name: "Peter Pan", userName: "pp@b.dk", password: secretHashed, role: "user" },
-    //   { name: "Donald Duck", userName: "dd@b.dk", password: secretHashed, role: "user" },
-    //   { name: "admin", userName: "admin@a.dk", password: secretHashed, role: "admin" }
-    // ])
 
     const team1 = { name: "Team1", userName: "t1", password: secretHashed, role: "team" }
     const team2 = { name: "Team2", userName: "t2", password: secretHashed, role: "team" }
@@ -60,8 +60,20 @@ describe("verify all endpoints", () => {
       positionCreator(12.48, getLatitudeInside(55.77, DISTANCE_TO_SEARCH), team2.userName, team2.name, true),
       positionCreator(12.48, getLatitudeOutside(55.77, DISTANCE_TO_SEARCH), team3.userName, team3.name, true),
     ]
-    const locations = await positionsCollection.insertMany(positions)
-
+    await positionsCollection.insertMany(positions)
+    
+    const postCollection = db.collection(POST_COLLECTION_NAME) 
+    await postCollection.deleteMany({})
+    await postCollection.insertOne({
+      _id: "Post1",
+      task: { text: "2+5", isUrl: false },
+      taskSolution: "7",
+      location: {
+        type: "Point",
+        coordinates: [12.49, 55.77]
+      }
+    });
+    
   })
 
   after(async () => {
@@ -69,9 +81,9 @@ describe("verify all endpoints", () => {
     await client.close();
   })
 
-/**
- * USER endpoints
- */
+  /**
+   * USER endpoints
+   */
 
   it("Should get the message Hello api", async () => {
     const result = await fetch(`${URL}/api/dummy`).then(r => r.json());
@@ -126,9 +138,9 @@ describe("verify all endpoints", () => {
     expect(result.status).to.be.equal("user deleted")
   })
 
-/**
- * GAME endpoints
- */
+  /**
+   * GAME endpoints
+   */
 
   it("Should find gameapi", async function () {
     const result = await fetch(`${URL}/gameapi/dummy`)
@@ -153,7 +165,7 @@ describe("verify all endpoints", () => {
     expect(result[0].userName).to.be.equal("t2")
   })
 
-  it("Should find team2 +team3, since both are inside range", async function () {
+  it("Should find team2 +team3, since both are inside range", async () => {
     const newPosition = { "userName": "t1", "password": "secret", "lat": 55.77, "lon": 12.48, "distance": DISTANCE_TO_SEARCH + 100 }
     const config = {
       method: 'POST',
@@ -166,7 +178,11 @@ describe("verify all endpoints", () => {
     const result = await fetch(`${URL}/gameapi/nearbyplayers`, config).then(r => r.json());
     expect(result.length).to.be.equal(2)
     expect(result[0].userName).to.be.equal("t2")
+    expect(result[0].lon).to.be.equal(12.48)
+    expect(result[0].lat).to.be.equal(getLatitudeInside(55.77, DISTANCE_TO_SEARCH))
     expect(result[1].userName).to.be.equal("t3")
+    expect(result[1].lon).to.be.equal(12.48)
+    expect(result[1].lat).to.be.equal(getLatitudeOutside(55.77, DISTANCE_TO_SEARCH))
   })
 
   it("Should NOT find team2, since not in range", async function () {
@@ -189,9 +205,8 @@ describe("verify all endpoints", () => {
     expect(result.length).to.be.equal(0)
   })
 
-  it("Should not find team2, since since credential are wrong", async function () {
+  it("Should not find team2, since credentials are wrong", async function () {
     try {
-
       const newPosition = { "userName": "t2", "password": "wsdfa", "lat": 55.77, "lon": 12.48, "distance": DISTANCE_TO_SEARCH + 100 }
       const config = {
         method: 'POST',
@@ -205,8 +220,51 @@ describe("verify all endpoints", () => {
     } catch (err) {
       expect(err.message).to.be.equal("wrong username or password!")
       expect(err.code).to.be.equal(403)
-      console.log("XXXXXXXXXXXXXHHHHHHHHHHHHHHHHHHH")
     }
   })
-  
+
+
+  /**
+   Response JSON (if found):
+     {"postId":"post1", "task": "2+5", isUrl:false}
+   * 
+   */
+  it("Should find Post1, when near", async function () {
+    const position = { "postId": "Post1", "lon": 12.49, "lat": 55.77 }
+    const config = {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(position)
+    }
+    const result = await fetch(`${URL}/gameapi/getpostifreached`, config).then(r => r.json());
+    expect(result.postId).to.be.equal("Post1")
+    expect(result.task).to.be.equal("2+5")
+    expect(result.isUrl).to.be.equal(false)
+  })
+
+  /**
+  Response JSON (if not reached):
+    {message: "Post not reached", code: 400} (StatusCode = 400)
+   */
+  it("Should not find Post1, since no where near", async function () {
+    try {
+      const position = { "postId": "Post1", "lon": 13, "lat": 15 }
+      const config = {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(position)
+      }
+      await fetch(`${URL}/gameapi/getpostifreached`, config).then(r => r.json());
+    } catch (err) {
+      expect(err.message).to.be.equal("Post not reached")
+      expect(err.code).to.be.equal(400)
+    }
+  })
+
 })

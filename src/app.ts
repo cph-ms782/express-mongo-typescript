@@ -11,7 +11,7 @@ const helmet = require('helmet')
  
 const app = express()
  
-app.use(helmet())
+// app.use(helmet())
 
 app.use(express.static(path.join(process.cwd(), "public")));
 
@@ -26,6 +26,7 @@ app.use("/gameapi", geoAPIRouter);
 app.get("/api/dummy", (req, res) => {
   res.json({ msg: "Hello api" })
 });
+
 app.get("/gameapi/dummy", (req, res) => {
   res.json({ msg: "Hello gameapi" })
 });
@@ -36,6 +37,7 @@ app.use(function (req, res, next) {
   }
   next();
 });
+
 app.use(function (req, res, next) {
   if (req.originalUrl.startsWith("/gameapi")) {
     res.status(404).json({ code: 404, msg: "this API does not contain this endpoint" })
