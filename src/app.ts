@@ -1,28 +1,32 @@
 // npm i @types/node
-// npm install geojson-utils
+// npm install geojson-utils helmet
+// npm install helmet --save
 
 require('dotenv').config();
 import express from "express";
 import path from "path";
 import { ApiError } from "./errors/apiError";
-
-const app = express();
+const helmet = require('helmet')
+ 
+const app = express()
+ 
+app.use(helmet())
 
 app.use(express.static(path.join(process.cwd(), "public")));
 
 app.use(express.json());
 
 let userAPIRouter = require('./routes/userApiDB');
-let geoAPIRouter = require('./routes/geoApi');
+let geoAPIRouter = require('./routes/gameApi');
 
 app.use("/api/users", userAPIRouter);
-app.use("/geoapi", geoAPIRouter);
+app.use("/gameapi", geoAPIRouter);
 
 app.get("/api/dummy", (req, res) => {
-  res.json({ msg: "Hello" })
+  res.json({ msg: "Hello api" })
 });
-app.get("/geoapi/dummy", (req, res) => {
-  res.json({ msg: "Hello geoapi dummy" })
+app.get("/gameapi/dummy", (req, res) => {
+  res.json({ msg: "Hello gameapi" })
 });
 
 app.use(function (req, res, next) {
@@ -39,7 +43,6 @@ app.use(function (req, res, next) {
 });
 
 app.use(function (err: any, req: any, res: any, next: Function) {
-  //if(err.name === "ApiError"){
   if (err instanceof (ApiError)) {
     const e = <ApiError>err;
     res.status(e.errorCode).send({ code: e.errorCode, message: e.message });

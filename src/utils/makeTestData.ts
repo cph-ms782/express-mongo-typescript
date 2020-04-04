@@ -10,8 +10,6 @@ const uri = process.env.CONNECTION || ""
 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
-
-
 (async function makeTestData() {
     try {
         await client.connect();
@@ -20,9 +18,9 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
         await usersCollection.deleteMany({})
         const secretHashed = await bryptAsync("secret");
         const status = await usersCollection.insertMany([
-            { name: "Peter Pan", userName: "pp@b.dk", password: secretHashed, role: "user" },
-            { name: "Donald Duck", userName: "dd@b.dk", password: secretHashed, role: "user" },
-            { name: "admin", userName: "admin@a.dk", password: secretHashed, role: "admin" }
+            { name: "Team1", userName: "t1", password: secretHashed, role: "team" },
+            { name: "Team2", userName: "t2", password: secretHashed, role: "team" },
+            { name: "Team3", userName: "t3", password: secretHashed, role: "team" }
         ])
         console.log(`Inserted ${status.insertedCount} test users`)
         console.log(`NEVER, NEVER, NEVER run this on a production database`)

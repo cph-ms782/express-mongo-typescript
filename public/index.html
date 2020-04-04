@@ -11,19 +11,39 @@
   <h2>API-documentation for semester project</h2>
   <a href="/api/dummy">Use Dummy API</a>
   <ul id="ul"></ul>
-  <button id="btn">Fecth all</button>
-  <script >
+  <button id="btn">Fetch all</button>
+  <button id="btn2">Find nearby 55.776643, 12.568630</button>
+  <script>
     const options = {
       method: "GET",
-      credentials:"same-origin",
-      headers : {"Accept": "application/json"}
+      credentials: "same-origin",
+      headers: { "Accept": "application/json" }
     }
-    document.getElementById("btn").onclick = function(){
-      fetch("/api/users",options).then(res=>res.json())
-      .then(data=>{
-        const lis = data.map(user=> `<li>${user.name}, ${user.userName} </li>` )
-        document.getElementById("ul").innerHTML = lis.join("");
+    document.getElementById("btn").onclick = function () {
+      fetch("/api/users", options).then(res => res.json())
+        .then(data => {
+          const lis = data.map(user => `<li>${user.name}, ${user.userName} </li>`)
+          document.getElementById("ul").innerHTML = lis.join("");
+        })
+    }
+    const options2 = {
+      method: "POST",
+      credentials: "same-origin",
+      headers: { "Accept": "application/json" },
+      body: JSON.stringify({
+        "userName": "team1",
+        "password": "secret",
+        "lat": 55.776643,
+        "lon": 12.568630,
+        "distance": 300
       })
+    }
+    document.getElementById("btn2").onclick = function () {
+      fetch("/gameapi/nearbyplayers", options2).then(res => res.json())
+        .then(data => {
+          const lis = data.map(user => `<li>${user.name}, ${user.userName} </li>`)
+          document.getElementById("ul").innerHTML = lis.join("");
+        })
     }
   </script>
 </body>

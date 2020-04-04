@@ -5,6 +5,9 @@ import { bryptAsync, bryptCheckAsync } from "../utils/bcrypt-async-helper"
 import * as mongo from "mongodb"
 import setup from "../config/setupDB"
 import { ApiError } from "../errors/apiError"
+import IPosition from '../interfaces/Position';
+import IPoint from '../interfaces/Point';
+import { POSITION_COLLECTION_NAME, USER_COLLECTION_NAME } from "../config/collectionNames"
 
 let userCollection: mongo.Collection;
 
@@ -19,7 +22,9 @@ export default class UserFacade {
             if (!client.isConnected()) {
                 await client.connect();
             }
-            userCollection = client.db(dbName).collection("users");
+            userCollection = client.db(dbName).collection(USER_COLLECTION_NAME);
+            await userCollection.createIndex({ userName: 1 }, { unique: true })
+
             return client.db(dbName);
 
         } catch (err) {
@@ -30,11 +35,19 @@ export default class UserFacade {
     static async addUser(user: IGameUser): Promise<string> {
         const hash = await bryptAsync(user.password);
         let newUser = { ...user, password: hash }
-        const result = await userCollection.insertOne(newUser);
-        return "User was added";
+        try {
+            const result = await userCollection.insertOne(newUser);
+            return "User was added";
+        } catch (err) {
+            if (err.code === 11000) {
+                throw new ApiError("This userName is already taken", 400)
+            }
+            //This should probably be logged
+            throw new ApiError(err.errmsg, 400)
+        }
     }
-    static async deleteUser(userName: string): Promise<string> {
 
+    static async deleteUser(userName: string): Promise<string> {
         const res = await userCollection.findOneAndDelete({
             userName
         })
@@ -44,12 +57,10 @@ export default class UserFacade {
         throw new ApiError("Error in deleting user", 400);
     }
 
-    //static async getAllUsers(): Promise<Array<IGameUser>> {
-    static async getAllUsers(): Promise<Array<any>> {
-        // throw new Error("Not Implemented")
+    static async getAllUsers(proj?: object): Promise<Array<any>> {
         const all = await userCollection.find(
             {},
-            { projection: { name: 1, _id: 0 } }
+            { projection: proj }
         );
         return all.toArray();
     }
@@ -71,7 +82,6 @@ export default class UserFacade {
             const user = await UserFacade.getUser(userName);
             userPassword = user.password;
         } catch (err) { }
-
         const status = await bryptCheckAsync(password, userPassword);
         return status
     }
@@ -107,7 +117,7 @@ async function test() {
     } catch (err) {
         console.log("Should not get here 1", err)
     }
-    
+
     try {
         const passwordStatus = await UserFacade.checkUser("kim@b.dk", "xxxx");
         console.log("Should not get here ", passwordStatus)

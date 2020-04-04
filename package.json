@@ -37,6 +37,7 @@
     "express": "^4.17.1",
     "express-winston": "^4.0.3",
     "geojson-utils": "^1.1.0",
+    "helmet": "^3.22.0",
     "mongodb": "^3.4.1",
     "tsscmp": "^1.0.6",
     "typescript": "^3.7.4",

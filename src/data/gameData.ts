@@ -25,7 +25,7 @@ export const gameArea: any = {
 export const players: any[] = [
 	{
 		"type": "Feature",
-		"properties": { "name": "Peter" },
+		"properties": { "name": "Peter Pan" },
 		"geometry": {
 			"type": "Point",
 			"coordinates": [
@@ -36,7 +36,7 @@ export const players: any[] = [
 	},
 	{
 		"type": "Feature",
-		"properties": { "name": "Hans" },
+		"properties": { "name": "Donald Duck" },
 		"geometry": {
 			"type": "Point",
 			"coordinates": [
@@ -52,17 +52,17 @@ export const players: any[] = [
 			"type": "Point",
 			"coordinates": [
 				12.564826,
-				55.776258
+				56.776258
 			]
 		}
 	},
 	{
 		"type": "Feature",
-		"properties": { "name": "Jensine" },
+		"properties": { "name": "admin" },
 		"geometry": {
 			"type": "Point",
 			"coordinates": [
-				12.562328,
+				13.562328,
 				55.777029
 			]
 		}

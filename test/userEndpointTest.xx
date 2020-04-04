@@ -45,7 +45,7 @@ describe("Create/Update Comments", () => {
 
   it("Should get the message Hello", async () => {
     const result = await fetch(`${URL}/api/dummy`).then(r => r.json());
-    expect(result.msg).to.be.equal("Hello")
+    expect(result.msg).to.be.equal("Hello api")
   })
 
   it("Should get three users", async () => {
