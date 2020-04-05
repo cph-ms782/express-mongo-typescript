@@ -21,8 +21,9 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
     const team1 = { name: "Team1", userName: "t1", password: secretHashed, role: "team" }
     const team2 = { name: "Team2", userName: "t2", password: secretHashed, role: "team" }
     const team3 = { name: "Team3", userName: "t3", password: secretHashed, role: "team" }
+    const admin = { name: "admin", userName: "admin", password: secretHashed, role: "admin" }
     
-    const status = await usersCollection.insertMany([team1,team2,team3])
+    const status = await usersCollection.insertMany([team1,team2,team3, admin])
   
     const positionsCollection = db.collection(POSITION_COLLECTION_NAME)
     await positionsCollection.deleteMany({})

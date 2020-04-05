@@ -42,7 +42,6 @@ describe("Verify the UserFacade", () => {
     ])
   })
 
-
   it("Should Add the user Jan", async () => {
     const newUser = { name: "Jan Olsen", userName: "jo@b.dk", password: "secret", role: "user" }
     try {
