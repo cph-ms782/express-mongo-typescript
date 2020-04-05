@@ -116,11 +116,11 @@ describe("verify all endpoints", () => {
   })
 
   it("Should Add the user Jan", async () => {
-    const newUser = {name:"Jan Olsen", userName:"jo@b.dk", password: "secret", role: "user"}
+    const newUser = { name: "Jan Olsen", userName: "jo@b.dk", password: "secret", role: "user" }
     const config = {
-      method : "POST",
-      headers : {
-        'Accept':'application/json',
+      method: "POST",
+      headers: {
+        'Accept': 'application/json',
         'Content-Type': 'application/json',
         'Authorization': userAuth,
       },
@@ -161,12 +161,33 @@ describe("verify all endpoints", () => {
     expect(result.status).to.be.equal("user deleted")
   })
 
+  it("Should not be able to have two with same username (unique)", async () => {
+    try {
+      const newUser = { name: "Jan Olsen", userName: "jo@b.dk", password: "secret", role: "user" }
+      const config = {
+        method: "POST",
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': userAuth,
+        },
+        body: JSON.stringify(newUser)
+      }
+      const result = await fetch(`${URL}/api/users`, config).then(r => r.json());
+    }
+    catch (err) {
+      expect(err instanceof ApiError).to.be.equal(true)
+      expect(err.message).to.be.equal("This userName is already taken")
+      expect(err.code).to.be.equal(400)
+    }
+  })
+
   /**
    * GAME endpoints
    */
 
   it("Should find gameapi", async function () {
-    const result = await fetch(`${URL}/gameapi/dummy`, auth)
+    const result = await fetch(`${URL}/gameapi/dummy`)
       .then(r => r.json());
     expect(result.msg).to.be.equal("Hello gameapi")
   })

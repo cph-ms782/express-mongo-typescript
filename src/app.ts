@@ -20,9 +20,6 @@ app.use(express.json());
 let userAPIRouter = require('./routes/userApiDB');
 let geoAPIRouter = require('./routes/gameApi');
 
-app.use("/api/users", userAPIRouter);
-app.use("/gameapi", geoAPIRouter);
-
 app.get("/api/dummy", (req, res) => {
   res.json({ msg: "Hello api" })
 });
@@ -30,6 +27,9 @@ app.get("/api/dummy", (req, res) => {
 app.get("/gameapi/dummy", (req, res) => {
   res.json({ msg: "Hello gameapi" })
 });
+
+app.use("/api/users", userAPIRouter);
+app.use("/gameapi", geoAPIRouter);
 
 app.use(function (req, res, next) {
   if (req.originalUrl.startsWith("/api")) {
