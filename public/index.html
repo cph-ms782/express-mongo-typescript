@@ -12,7 +12,7 @@
   <a href="/api/dummy">Use Dummy API</a>
   <ul id="ul"></ul>
   <button id="btn">Fetch all</button>
-  <button id="btn2">Find nearby 55.776643, 12.568630</button>
+  <button id="btn2">Find nearby 55.776643, 12.568630, Distance 30km</button>
   <script>
     const options = {
       method: "GET",
@@ -29,20 +29,28 @@
     const options2 = {
       method: "POST",
       credentials: "same-origin",
-      headers: { "Accept": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+      },
       body: JSON.stringify({
-        "userName": "team1",
+        "userName": "t1",
         "password": "secret",
         "lat": 55.776643,
         "lon": 12.568630,
-        "distance": 300
+        "distance": 30000
       })
     }
     document.getElementById("btn2").onclick = function () {
-      fetch("/gameapi/nearbyplayers", options2).then(res => res.json())
+      fetch("/gameapi/nearbyplayers", options2)
+        .then(res => res.json())
         .then(data => {
-          const lis = data.map(user => `<li>${user.name}, ${user.userName} </li>`)
-          document.getElementById("ul").innerHTML = lis.join("");
+          if (data.length!==0) {
+            const lis = data.map(user => `<li>${user.userName}, lon: ${user.lon}, lat: ${user.lat} </li>`)
+            document.getElementById("ul").innerHTML = lis.join("");
+          } else {
+            document.getElementById("ul").innerHTML = "No data"
+          }
         })
     }
   </script>
