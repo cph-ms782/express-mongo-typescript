@@ -23,11 +23,12 @@ let client: MongoClient;
 const DISTANCE_TO_SEARCH = 100
 const MOCHA_TIMEOUT = 5000;
 
+const userAuth = "Basic " + encoding("admin:secret")
+
 /**
  * make base64 encoding for authorization
  */
 const authConfig = () => {
-  const userAuth = "Basic " + encoding("admin:secret")
   const config = {
     method: 'GET',
     headers: {
@@ -111,23 +112,34 @@ describe("verify all endpoints", () => {
 
   it("Should get three users", async () => {
     const result = await fetch(`${URL}/api/users`, auth).then(r => r.json());
-    expect(result.length).to.be.equal(3)
+    expect(result.length).to.be.equal(4)
   })
 
   it("Should Add the user Jan", async () => {
-    const result = await fetch(`${URL}/api/users`, authConfig()).then(r => r.json());
+    const newUser = {name:"Jan Olsen", userName:"jo@b.dk", password: "secret", role: "user"}
+    const config = {
+      method : "POST",
+      headers : {
+        'Accept':'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': userAuth,
+      },
+      body: JSON.stringify(newUser)
+    }
+    const result = await fetch(`${URL}/api/users`, config).then(r => r.json());
+    const jan = await fetch(`${URL}/api/users/jo@b.dk`, auth).then(r => r.json());
     expect(result.status).to.be.equal("User was added")
+    expect(jan.name).to.be.equal("Jan Olsen")
   })
 
   it("Should find the user t1", async () => {
-    const result = await fetch(`${URL}/api/users/t1`).then(r => r.json());
+    const result = await fetch(`${URL}/api/users/t1`, auth).then(r => r.json());
     expect(result.name).to.be.equal("Team1")
-
   })
 
   it("Should not find the user xxx@b.dk", async () => {
     try {
-      const result = await fetch(`${URL}/api/users/xxx@b.dk`).then(r => r.json());
+      const result = await fetch(`${URL}/api/users/xxx@b.dk`, auth).then(r => r.json());
       expect(result.name).not.to.be.equal("Donald Duck")
     }
     catch (err) {
@@ -141,7 +153,8 @@ describe("verify all endpoints", () => {
       method: 'DELETE',
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': userAuth,
       }
     }
     const result = await fetch(`${URL}/api/users/t1`, config).then(r => r.json());
@@ -153,7 +166,7 @@ describe("verify all endpoints", () => {
    */
 
   it("Should find gameapi", async function () {
-    const result = await fetch(`${URL}/gameapi/dummy`)
+    const result = await fetch(`${URL}/gameapi/dummy`, auth)
       .then(r => r.json());
     expect(result.msg).to.be.equal("Hello gameapi")
   })
@@ -166,7 +179,8 @@ describe("verify all endpoints", () => {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': userAuth,
       },
       body: JSON.stringify(newPosition)
     }
@@ -181,7 +195,8 @@ describe("verify all endpoints", () => {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': userAuth,
       },
       body: JSON.stringify(newPosition)
     }
@@ -207,7 +222,8 @@ describe("verify all endpoints", () => {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': userAuth,
       },
       body: JSON.stringify(newPosition)
     }
@@ -222,7 +238,8 @@ describe("verify all endpoints", () => {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': userAuth,
         },
         body: JSON.stringify(newPosition)
       }
@@ -245,7 +262,8 @@ describe("verify all endpoints", () => {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': userAuth,
       },
       body: JSON.stringify(position)
     }
@@ -266,7 +284,8 @@ describe("verify all endpoints", () => {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': userAuth,
         },
         body: JSON.stringify(position)
       }
