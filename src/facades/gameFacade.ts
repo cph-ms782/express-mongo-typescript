@@ -63,19 +63,6 @@ export default class GameFacade {
 
     /**
      * 
-     * @param point 
-     * @param polygon 
-     */
-    static async pointInPolygon(point: any, polygon: any): Promise<any> {
-        const inside = gju.pointInPolygon(point, {
-            type: 'Polygon',
-            coordinates: polygon.features[0].geometry.coordinates
-        });
-        return inside;
-    }
-
-    /**
-     * 
      * @param userName 
      * @param password 
      * @param lon 
@@ -243,6 +230,19 @@ export default class GameFacade {
         });
         const newPost: any = status.ops;
         return newPost as IPost
+    }
+
+    /**
+     * 
+     * @param point 
+     * @param polygon 
+     */
+    static async pointInPolygon(point: any, polygon: any): Promise<any> {
+        const inside = gju.pointInPolygon(point, {
+            type: 'Polygon',
+            coordinates: polygon.features[0].geometry.coordinates
+        });
+        return inside;
     }
 
     /**
