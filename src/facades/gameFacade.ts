@@ -89,8 +89,10 @@ export default class GameFacade {
                 ]
             };
 
+            // Update players coordinates in database
             const foundAndUpdatePlayer = GameFacade.findAndUpdateUser(userName, userGeometry)
 
+            // find all other players in range
             const foundPlayers: any[] = await GameFacade.findNearbyPlayers(
                 userName,
                 userGeometry,
@@ -98,7 +100,6 @@ export default class GameFacade {
             )
 
             // If anyone found,  format acording to requirements
-            // [{"userName": "team2", "lat": 4, "lon" : 10}, {..}, ..]
             const formatted: any[] = foundPlayers.map((player) => {
                 return {
                     userName: player.userName,
