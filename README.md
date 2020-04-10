@@ -135,8 +135,13 @@ proxy\_cache\_bypass \$http\_upgrade;
 
 Explain, using relevant examples, the Express concept; middleware.
 
-**Middleware is code running after** var app = express() where the
-request object enters the code and before the routing part
+Middleware er kode, der kører efter var app = express (), hvor requestet
+objektet møder den første kode og før routing delen. Middleware'n sender
+bolden videre til næste middleware eller til routingen ved hjælp af
+funktionen **next()**
+
+[*Visual Code*](http://./src/app.ts)
+[*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/app.ts#L12)
 
 \#\#\#\#todo
 
@@ -144,9 +149,71 @@ Explain, using relevant examples, your strategy for implementing a
 REST-API with Node/Express + TypeScript and demonstrate how you have
 tested the API.
 
+NodeJS app'en starter i trypescript filen app.ts. Routing foregår i
+denne fil, men bliver udgrenet i underfiler for ikke at app.ts bliver
+for uoverskuelig.
+
+![](Pictures/10000000000001B700000105DD85AC709776E038.png)
+
+[*Visual Code*](http://./src/app.ts)
+[*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/app.ts#L20)
+
+Tests ligger i rodfolderen **/test**. Alle tests der ligger heri bliver
+udført, pånær hvis man f.eks giver dem typen .xx.
+
+![](Pictures/1000000000000290000000527404C4BC232C047C.png)
+
+Eksempel på enkelt REST API GET test af **/api/users** ([*Visual
+Code*](http://./test/endpointTest.ts)
+[*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/test/endpointTest.ts#L113)).
+Normalt behøves der ikke at komme en options del med i requestet (ses
+som auth i ovenstående billede), men da der er authentication på siden,
+så ville testen fejle hvis denne authentication var slået til.
+
+Auth delen ser således ud ([*Visual
+Code*](http://./test/gameFacadeTest.ts)
+[*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/test/endpointTest.ts#L26)):
+
+![](Pictures/10000000000001BF0000013D3BAB71E7B1696435.png)
+
+userAuth, der også bruges flere steder i tests (se eksempel længere
+nede), er keypairet **bruger:kodeord** lavet om til base64 encoding, som
+basic http authentication kan læse ([*Visual
+Code*](http://./src/utils/makeBase64.ts)
+[*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/utils/makeBase64.ts#L1)):
+
+![](Pictures/100000000000029F000000A1476B9353733B29F2.png)
+
+Eksempel på både GET og POST request tests af /api/users/:userName
+([*Visual Code*](http://test/endpointTest.ts)
+[*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/test/endpointTest.ts#L118)).
+Først POST'es en ny bruger ind. Bemærk {'Autherization': userAuth}, hvor
+et base64 bruger:kodeord keypair sendes videre i headeren. Dette
+efterfølges af en GET test på om den nye bruger kan findes:
+
+![](Pictures/100000000000032D0000013527D3AD1D8D620CEF.png)
+
 Explain, using relevant examples, how to test JavaScript/Typescript
 Backend Code, relevant packages (Mocha, Chai etc.) and how to test
 asynchronous code.
+
+Mocha er et testing framework hvor man bl.a. Kan teste asyncront. Chai
+er et BDD (behavior-driven development)/ TDD (test-driven dev.)
+assertion library til node og browseren, der kan kobles på f.eks. Mocha.
+Den gør det lettere at skrive test, da ikke programmører kan skrive dem
+langt hen af vejen.
+
+Se fra ovenstående billede:
+
+**expect**(result.status)**.to.be.equal**(\"User was added\")
+
+**expect**(jan.name)**.to.be.equal**(\"Jan Olsen\")
+
+Kan også opfange exceptions ([*Visual
+Code*](http://test/gameFacadeTest.ts)
+[*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/test/gameFacadeTest.ts#L118)):
+
+![](Pictures/1000000000000289000000F94747F973C02657C3.png)
 
 NoSQL and MongoDB
 
@@ -167,12 +234,91 @@ MySQL.
 *Explain* about indexes in MongoDB, how to create them, and
 *demonstrate* how you have used them.
 
+Indexes gør det let for mongoDB at udføre søgninger. Uden disse ville
+databasen skulle igennem alle datasæt for at finde den ønskede data:
+
+MongoDB definerer indekser på collection niveau. Når en collection
+sættes op i koden, kan man bruge createIndex (se nedenunder). En
+collection deklarering kan se således ud: **const** **mongoDBCollection
+= mongo.MongoClient.db("semester\_case").collection("positions")**
+
+**Hvordan laves de**:
+
+Ved at bruge **mongoDBCollection.createIndex()**:
+
+TTL (time to live): **collection.createIndex({ lastUpdated: 1 }, {
+expireAfterSeconds: 3600 })**
+
+geoSpatial index: **collection.createIndex({ location: \"2dsphere\" })**
+
+**Hvordan bruges de:**
+
+De bruges i mondoDB metoder som f.eks .find() eller .findOneAndUpdate()
+eller direkte af databasen selv ved f.eks. TTL som oprettet i
+ovenstående.
+
+Her ses en søgning på location indexet ([*Visual
+Code*](http://src/facades/gameFacade.ts)
+[*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/facades/gameFacade.ts#L182)):
+
+![](Pictures/10000000000002A20000017F28C99709304CA7E3.png)
+
 *Explain*, *using your own code* examples, how you have used some of
 MongoDB\'s \"special\" indexes like *TTL* and *2dsphere and perhaps also
 the Unique Index.*
 
+TTL og 2dsphere er vist i ovenstående. Unique er brugt ved oprettelse af
+en bruger, så der sikres at et værdi indsat i databasen kun kan bruges
+een gang ([*Visual Code*](http://src/facades/userFacadeWithDB.ts)
+[*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/facades/userFacadeWithDB.ts#L25)):
+
+![](Pictures/100000000000024A0000002C24023F28A5B0DF4D.png)
+
 *Demonstrate*, using a REST-API *you have designed*, how to perform all
 CRUD operations on a MongoDB
+
+**CR**eate: Oprettelse af bruger:
+
+-   REST ([*Visual Code*](http://src/routes/userApiDB.ts)
+    [*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/routes/userApiDB.ts#L21))
+    POST /api/users. Sender et bruger objekt videre som opfylder kravene
+    til at være en IGameUser ([*Visual
+    Code*](http://src/interfaces/GameUser.ts)
+    [*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/interfaces/GameUser.ts#L1))
+-   backend ([*Visual Code*](http://src/facades/userFacadeWithDB.ts)
+    [*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/facades/userFacadeWithDB.ts#L35)).
+    addUser() modtager brugeren og opretter vedkommende med krypteret
+    kodeord. Mongo metoden insertOne bruges til at oprette og bcryptjs
+    krypterer kodeordet.
+
+**U**pdate: Oprettelse af en position eller opdatering af eksisterende,
+når der søges på omkringliggende brugere:
+
+-   REST ([*Visual Code*](http://src/routes/userApiDB.ts)
+    [*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/routes/gameApi.ts#L52))
+    POST /api/users/nearbyplayers med auth info og lon/lat og distance
+    sendes videre til nearbyPlayers() i facaden
+-   backend ([*Visual Code*](http://src/facades/gameFacade.ts)
+    [*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/facades/gameFacade.ts#L72)
+    og
+    [*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/facades/gameFacade.ts#L151))
+    nearbyPlayers søger på andre brugere og opdaterer samtidig søgerens
+    position i databasen via findNearbyPlayers. Denne kører mongo
+    metoden findOneAndUpdate med upsert sat i options, så der oprettes
+    hvis positionen ikke eksisterer.
+
+**D**elete: Fjernelse af en bruger:
+
+-   REST ([*Visual Code*](http://src/routes/userApiDB.ts)
+    [*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/routes/userApiDB.ts#L99))
+    DELETE /api/users/:userName sender brugernavn videre til
+    userFacade.deleteUser() (hvis auth er slået til skal man være
+    admin), userName kommer fra URL parameter og admin role kommer fra
+    request objektet.
+-   backend ([*Visual Code*](http://src/facades/userFacadeWithDB.ts)
+    [*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/facades/userFacadeWithDB.ts#L50))
+    deleteUser() benytter mongo metoden findOneAndDelete til at fjerne
+    en bruger. Der kommer en exception hvis brugeren ikke kan findes.
 
 *Explain*, using a *relevant example*, a full JavaScript backend
 including relevant test cases to test the REST-API (not on the
