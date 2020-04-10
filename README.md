@@ -155,7 +155,7 @@ for uoverskuelig.
 
 ![](Pictures/10000000000001B700000105DD85AC709776E038.png)
 
-[*Visual Code*](http://./src/app.ts)
+[*Visual Code*](./src/app.ts)
 [*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/app.ts#L20)
 
 Tests ligger i rodfolderen **/test**. Alle tests der ligger heri bliver
@@ -164,14 +164,14 @@ udført, pånær hvis man f.eks giver dem typen .xx.
 ![](Pictures/1000000000000290000000527404C4BC232C047C.png)
 
 Eksempel på enkelt REST API GET test af **/api/users** ([*Visual
-Code*](http://./test/endpointTest.ts)
+Code*](./test/endpointTest.ts)
 [*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/test/endpointTest.ts#L113)).
 Normalt behøves der ikke at komme en options del med i requestet (ses
 som auth i ovenstående billede), men da der er authentication på siden,
 så ville testen fejle hvis denne authentication var slået til.
 
 Auth delen ser således ud ([*Visual
-Code*](http://./test/gameFacadeTest.ts)
+Code*](./test/gameFacadeTest.ts)
 [*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/test/endpointTest.ts#L26)):
 
 ![](Pictures/10000000000001BF0000013D3BAB71E7B1696435.png)
@@ -191,7 +191,7 @@ Først POST'es en ny bruger ind. Bemærk {'Autherization': userAuth}, hvor
 et base64 bruger:kodeord keypair sendes videre i headeren. Dette
 efterfølges af en GET test på om den nye bruger kan findes:
 
-![](Pictures/100000000000032D0000013527D3AD1D8D620CEF.png)
+![](static/base64.png)
 
 Explain, using relevant examples, how to test JavaScript/Typescript
 Backend Code, relevant packages (Mocha, Chai etc.) and how to test
