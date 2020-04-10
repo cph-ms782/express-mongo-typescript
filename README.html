@@ -1,0 +1,190 @@
+<p>cph-ms782, Martin Bøgh Sander-Thomsen</p>
+<p><span id="anchor"></span>Fullstack Javascript</p>
+<p><span id="anchor-1"></span>Period-2 </p>
+<p><span id="anchor-2"></span>Node, Express with TypeScript, JavaScript Backend Testing, MongoDB and Geo-location</p>
+<p>     Explain Pros &amp; Cons in using Node.js + Express to implement your Backend compared to a strategy using, for example, Java/JAX-RS/Tomcat</p>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>It’s easier to setup and run</li>
+<li>You can attach parameters to request object during run (for example adding user role)</li>
+<li>###todo</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>###todo</li>
+</ul>
+<p>####todo</p>
+<p>     Explain the difference between <em>Debug outputs</em> and <em>ApplicationLogging</em>. What’s wrong with console.log(..) statements in our backend code.</p>
+<p><em><strong>console.log(…) statements are blocking</strong></em></p>
+
+<p>     Demonstrate a system using application logging and environment controlled debug statements.</p>
+<p>TODO link</p>
+<p><a href="http://docs.google.com/week10+11/express-exercises-day1/src/app.ts">app.ts</a></p>
+<p><a href="http://docs.google.com/week10+11/express-exercises-day1/src/middlewares/logger.ts">logger.ts</a></p>
+<p>Using the debug package Install the debug package (npm install debug) Add the following declaration to your local <strong>.env-file</strong>:</p>
+<p>DEBUG=game-case</p>
+<p>In the start of your file:</p>
+<p>require(‘dotenv’).config();</p>
+<p>const debug = require(“debug”)(“game-case”);</p>
+<p>Then, whenever you have done console.log(“Hello”), do debug(“Hello”)</p>
+<p>     Explain, using relevant examples, concepts related to testing a REST-API using Node/JavaScript/Typescript + relevant packages </p>
+<p><a href="http://docs.google.com/week10+11/express-exercises-day1/test/simpleDemo.ts">builtin node assert</a></p>
+<p><a href="http://docs.google.com/week10+11/express-exercises-day1/test/simpleDemoWithChai.ts">Mocha Chai</a></p>
+<p>** Example async:**</p>
+<p>it(“Should eventually find number of files in temp folder &quot; + folder, async function () { try { const files: any = findFiles(”./&quot; + folder, “.txt”);</p>
+<p>expect(files.length).to.be.equal(5); } catch (err) { //Observe – normal try-catch, when you use async-await // expect(err).to.be.equal(“Wrong arguments”); }})</p>
+<p><a href="http://docs.google.com/week10+11/express-exercises-day1/test/simpleRestTest.ts">REST test</a></p>
+
+<p>     Explain a setup for Express/Node/Test/Mongo-DB development with Typescript, and how it handles &quot;secret values&quot;, debug and testing.</p>
+<p><strong>Using middleware, you can intercepts requests before the rest routing is done and in the “layer” you can insert &quot;security&quot;</strong></p>
+<p>####todo</p>
+<p>(     ) </p>
+<p>Explain, preferably using an example, how you have deployed your node/Express applications, and which of the Express Production best practices you have followed.</p>
+<p>Explain possible steps to deploy many node/Express servers on the same droplet, how to deploy the code and how to ensure servers will continue to operate, even after a droplet restart.</p>
+<p>Explain, your chosen strategy to deploy a Node/Express application including how to solve the following deployment problems:</p>
+<ul>
+<li>Ensure that your Node-process restarts after a (potential) exception that closed the application</li>
+<li>Ensure that your Node-process restarts after a server (Ubuntu) restart</li>
+</ul>
+<p><strong>Use nodemon (man behøver ikke skrive hvilken il der skal startes, så længe den er specificeret main i package.json filen)</strong></p>
+<ul>
+<li>Ensure that you can run “many” node-applications on a single droplet on the same port (80)</li>
+</ul>
+<p>I Digital Ocean dns server indstilles hvert sub-domæne til at pege på den samme droplet (<strong>express1</strong>.server.com, <strong>express2</strong>.server.com osv).</p>
+<p>Ved at ændre i nginx opsætningen på linux serveren, så den kan kan håndtere forskellige sub-domæner. Første domæne vil have følgende opsætningen i <strong>/etc/nginx/sites-enabled/default</strong>. Express1 og port 5000. Den næste vil hedde express2 og 5002.</p>
+<p>Start flere express servere med forskellige portnumre (5000 og 5001)</p>
+
+<p>    server_name <strong>express1</strong>.server.com;</p>
+
+<p>    location / {</p>
+<p>        proxy_pass http://localhost:<strong>5000</strong>;</p>
+<p>        proxy_http_version 1.1;</p>
+<p>        proxy_set_header Upgrade $http_upgrade;</p>
+<p>        proxy_set_header Connection 'upgrade';</p>
+<p>        proxy_set_header Host $host;</p>
+<p>        proxy_cache_bypass $http_upgrade;</p>
+<p>    }</p>
+
+
+
+
+
+<p>      Explain, using relevant examples, the Express concept; middleware.</p>
+<p>Middleware er kode, der kører efter var app = express (), hvor requestet objektet møder den første kode og før routing delen. Middleware’n sender bolden videre til næste middleware eller til routingen ved hjælp af funktionen <strong>next()</strong></p>
+<p><a href="http://./src/app.ts"><em>Visual Code</em></a> <a href="https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/app.ts#L12"><em>github</em></a></p>
+<p>####todo</p>
+
+<p>      Explain, using relevant examples, your strategy for implementing a REST-API with Node/Express + TypeScript and demonstrate how you have tested the API.</p>
+<p>NodeJS app’en starter i trypescript filen app.ts. Routing foregår i denne fil, men bliver udgrenet i underfiler for ikke at app.ts bliver for uoverskuelig.</p>
+<p><img src="Pictures/10000000000001B700000105DD85AC709776E038.png" style="width:4.5728in;height:2.7189in" /></p>
+
+<p><a href="http://./src/app.ts"><em>Visual Code</em></a> <a href="https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/app.ts#L20"><em>github</em></a></p>
+
+<p>Tests ligger i rodfolderen<strong> /test</strong>. Alle tests der ligger heri bliver udført, pånær hvis man f.eks giver dem typen .xx.</p>
+<p><img src="Pictures/1000000000000290000000527404C4BC232C047C.png" style="width:6.8335in;height:0.8543in" /></p>
+<p>Eksempel på enkelt REST API GET test af<strong> /api/users</strong> (<a href="http://./test/endpointTest.ts"><em>Visual Code</em></a> <a href="https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/test/endpointTest.ts#L113"><em>github</em></a>). Normalt behøves der ikke at komme en options del med i requestet (ses som auth i ovenstående billede), men da der er authentication på siden, så ville testen fejle hvis denne authentication var slået til. </p>
+<p>Auth delen ser således ud (<a href="http://./test/gameFacadeTest.ts"><em>Visual Code</em></a> <a href="https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/test/endpointTest.ts#L26"><em>github</em></a>):</p>
+<p><img src="Pictures/10000000000001BF0000013D3BAB71E7B1696435.png" style="width:4.6563in;height:3.302in" /></p>
+
+<p>userAuth, der også bruges flere steder i tests (se eksempel længere nede), er keypairet <strong>bruger:kodeord</strong> lavet om til base64 encoding, som basic http authentication kan læse (<a href="http://./src/utils/makeBase64.ts"><em>Visual Code</em></a> <a href="https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/utils/makeBase64.ts#L1"><em>github</em></a>):</p>
+<p><img src="Pictures/100000000000029F000000A1476B9353733B29F2.png" style="width:6.9898in;height:1.6772in" /></p>
+
+<p>Eksempel på både GET og POST request tests af /api/users/:userName (<a href="http://test/endpointTest.ts"><em>Visual Code</em></a> <a href="https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/test/endpointTest.ts#L118"><em>github</em></a>). Først POST’es en ny bruger ind. Bemærk {‘Autherization’: userAuth}, hvor et base64 bruger:kodeord keypair sendes videre i headeren. Dette efterfølges af en GET test på om den nye bruger kan findes:</p>
+<p><img src="Pictures/100000000000032D0000013527D3AD1D8D620CEF.png" style="width:8.4689in;height:3.2189in" /></p>
+
+
+<p>     Explain, using relevant examples, how to test JavaScript/Typescript Backend Code, relevant packages (Mocha, Chai etc.) and how to test asynchronous code.</p>
+<p>Mocha er et testing framework hvor man bl.a. Kan teste asyncront. Chai er et BDD (behavior-driven development)/ TDD (test-driven dev.) assertion library til node og browseren, der kan kobles på f.eks. Mocha. Den gør det lettere at skrive test, da ikke programmører kan skrive dem langt hen af vejen.</p>
+<p>Se fra ovenstående billede:</p>
+<p><strong>expect</strong>(result.status)<strong>.to.be.equal</strong>(&quot;User was added&quot;)</p>
+<p><strong>expect</strong>(jan.name)<strong>.to.be.equal</strong>(&quot;Jan Olsen&quot;)</p>
+
+<p>Kan også opfange exceptions (<a href="http://test/gameFacadeTest.ts"><em>Visual Code</em></a> <a href="https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/test/gameFacadeTest.ts#L118"><em>github</em></a>):</p>
+<p><img src="Pictures/1000000000000289000000F94747F973C02657C3.png" style="width:6.7602in;height:2.5937in" /></p>
+
+<p>NoSQL and MongoDB </p>
+<p>     <em> Explain</em>, generally, what is meant by a NoSQL database.</p>
+<p>En NoSQL-database er en database der giver dig mulighed for at gemme og hente data, der ikke er omhyggeligt modelleret på en tabelform, som du skal med en relational database.</p>
+
+<p>     <em> Explain</em> Pros &amp; Cons in using a NoSQL database like MongoDB as your data store, compared to a traditional Relational SQL Database like MySQL.</p>
+<ul>
+<li>Ting går lidt hurtigere (hvis man har valgt det rigtige scenarie)</li>
+<li>kan håndtere store mængder data</li>
+<li>behøver ikke at bruge et bestemt skema at lægge data ind ##todo</li>
+</ul>
+
+<p>     <em> Explain</em> about indexes in MongoDB, how to create them, and <em>demonstrate</em> how you have used them.</p>
+<p>Indexes gør det let for mongoDB at udføre søgninger. Uden disse ville databasen skulle igennem alle datasæt for at finde den ønskede data:</p>
+<p>MongoDB definerer indekser på collection niveau. Når en collection sættes op i koden, kan man bruge createIndex (se nedenunder). En collection deklarering kan se således ud: <strong>const</strong> <strong>mongoDBCollection = mongo.MongoClient.db(“semester_case”).collection(“positions”)</strong></p>
+
+<p><strong>Hvordan laves de</strong>: </p>
+<p>Ved at bruge<strong> mongoDBCollection.createIndex()</strong>:</p>
+<p>TTL (time to live): <strong>collection.createIndex({ lastUpdated: 1 }, { expireAfterSeconds: 3600 })</strong></p>
+<p>geoSpatial index: <strong>collection.createIndex({ location: &quot;2dsphere&quot; })</strong></p>
+
+<p><strong>Hvordan bruges de:</strong></p>
+<p>De bruges i mondoDB metoder som f.eks .find() eller .findOneAndUpdate() eller direkte af databasen selv ved f.eks. TTL som oprettet i ovenstående.</p>
+<p>Her ses en søgning på location indexet (<a href="http://src/facades/gameFacade.ts"><em>Visual Code</em></a> <a href="https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/facades/gameFacade.ts#L182"><em>github</em></a>):</p>
+<p><img src="Pictures/10000000000002A20000017F28C99709304CA7E3.png" style="width:7.0209in;height:3.9898in" /></p>
+
+<p>     <em> Explain</em>, <em>using your own code</em> examples, how you have used some of MongoDB's &quot;special&quot; indexes like <em>TTL</em> and <em>2dsphere and perhaps also the Unique Index.</em></p>
+<p>TTL og 2dsphere er vist i ovenstående. Unique er brugt ved oprettelse af en bruger, så der sikres at et værdi indsat i databasen kun kan bruges een gang (<a href="http://src/facades/userFacadeWithDB.ts"><em>Visual Code</em></a> <a href="https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/facades/userFacadeWithDB.ts#L25"><em>github</em></a>):</p>
+<p><img src="Pictures/100000000000024A0000002C24023F28A5B0DF4D.png" style="width:6.1043in;height:0.4583in" /></p>
+
+<p>     <em>  Demonstrate</em>, using a REST-API <em>you have designed</em>, how to perform all CRUD operations on a MongoDB</p>
+<p><strong>CR</strong>eate: Oprettelse af bruger:</p>
+<ul>
+<li>REST (<a href="http://src/routes/userApiDB.ts"><em>Visual Code</em></a> <a href="https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/routes/userApiDB.ts#L21"><em>github</em></a>) POST /api/users. Sender et bruger objekt videre som opfylder kravene til at være en IGameUser (<a href="http://src/interfaces/GameUser.ts"><em>Visual Code</em></a> <a href="https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/interfaces/GameUser.ts#L1"><em>github</em></a>)</li>
+<li>backend (<a href="http://src/facades/userFacadeWithDB.ts"><em>Visual Code</em></a> <a href="https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/facades/userFacadeWithDB.ts#L35"><em>github</em></a>). addUser() modtager brugeren og opretter vedkommende med krypteret kodeord. Mongo metoden insertOne bruges til at oprette og bcryptjs krypterer kodeordet.</li>
+</ul>
+<p><strong>U</strong>pdate: Oprettelse af en position eller opdatering af eksisterende, når der søges på omkringliggende brugere: </p>
+<ul>
+<li>REST (<a href="http://src/routes/userApiDB.ts"><em>Visual Code</em></a> <a href="https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/routes/gameApi.ts#L52"><em>github</em></a>) POST /api/users/nearbyplayers med auth info og lon/lat og distance sendes videre til nearbyPlayers() i facaden</li>
+<li>backend (<a href="http://src/facades/gameFacade.ts"><em>Visual Code</em></a> <a href="https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/facades/gameFacade.ts#L72"><em>github</em></a> og <a href="https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/facades/gameFacade.ts#L151"><em>github</em></a>) nearbyPlayers søger på andre brugere og opdaterer samtidig søgerens position i databasen via findNearbyPlayers. Denne kører mongo metoden findOneAndUpdate med upsert sat i options, så der oprettes hvis positionen ikke eksisterer.</li>
+</ul>
+<p><strong>D</strong>elete: Fjernelse af en bruger: </p>
+<ul>
+<li>REST (<a href="http://src/routes/userApiDB.ts"><em>Visual Code</em></a> <a href="https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/routes/userApiDB.ts#L99"><em>github</em></a>) DELETE /api/users/:userName sender brugernavn videre til userFacade.deleteUser() (hvis auth er slået til skal man være admin), userName kommer fra URL parameter og admin role kommer fra request objektet.</li>
+<li>backend (<a href="http://src/facades/userFacadeWithDB.ts"><em>Visual Code</em></a> <a href="https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/facades/userFacadeWithDB.ts#L50"><em>github</em></a>) deleteUser() benytter mongo metoden findOneAndDelete til at fjerne en bruger. Der kommer en exception hvis brugeren ikke kan findes.</li>
+</ul>
+
+
+<p>     <em>  Explain</em>, using a <em>relevant example</em>, a full JavaScript backend including relevant test cases to test the REST-API (not on the production database)</p>
+
+
+<p>     <em> </em>Demonstrate, using your own code-samples, decisions you have made regarding → normalization vs denormalization </p>
+
+
+<p><span id="anchor-3"></span>Geo-location and Geojson</p>
+<p>     <em>  </em>Explain and demonstrate basic Geo-JSON, involving as a minimum, Points and Polygons</p>
+<p>GeoJSON er en måde at repræsentere geografiske data på. Det er et åbent standardformat designet til at repræsentere enkle geografiske funktioner. </p>
+
+
+<p>     <em>  </em>Explain and demonstrate ways to create Geo-JSON test data</p>
+<p>Når der testes bruges normale metoder til at oprette data. En forskel dog er hvor lang tid at positionen overlever i databasen da optionerne <strong>lastUpdated</strong> og <strong>expiresAfterSeconds</strong> kan være sat så positionerne forsvinder efter kort tid. Derfor er det praktisk at sætte lastUpdated langt ude i fremtiden, så den ikke forsvinder så hurtigt.</p>
+<p><a href="https://github.com/cph-ms782/express-mongo-typescript/blob/bb5e7088dc8ff47d042a67a0a68aadeb2793c0e8/test/gameFacadeTest.ts#L52"><em>Opretning af test data</em></a> <a href="https://github.com/cph-ms782/express-mongo-typescript/blob/bb5e7088dc8ff47d042a67a0a68aadeb2793c0e8/src/utils/geoUtils.ts#L19"><em>positionCreator</em></a></p>
+<p><a href="http://./test/gameFacadeTest.ts"><em>Test kode </em></a></p>
+
+
+<p>     <em>  </em>Explain the typical order of longitude and latitude used by Server-Side API’s and Client-Side API’s</p>
+<p><strong>longitude, latitude (som X,Y) brugt af de fleste formater og er Open Geospatial Consortium’s anbefaling</strong></p>
+<p><strong>latitude, longitude (som Y,X) brugt især af Google, map software og client-side teknologier (inkl. Airbnb’s, google maps)</strong></p>
+<p><strong>Udvikleren er ansvarlig for at finde ud af, hvad der bruges.</strong></p>
+
+<p>     <em>  </em>Explain and demonstrate a REST API that implements geo-features, using a relevant geo-library and plain JavaScript</p>
+<p>Ved hjælp af npm modulet ‘geojson-utils’ kan man lave let lave geo beregninger, som; </p>
+<ul>
+<li>hvor langt er der imellem to punkter <a href="https://github.com/cph-ms782/express-mongo-typescript/blob/bb5e7088dc8ff47d042a67a0a68aadeb2793c0e8/src/facades/gameFacade.ts#L273"><em>facade</em></a> <a href="https://github.com/cph-ms782/express-mongo-typescript/blob/bb5e7088dc8ff47d042a67a0a68aadeb2793c0e8/src/routes/gameApi.ts#L70"><em>REST</em></a></li>
+<li>er et punkt indenfor en geometri <a href="https://github.com/cph-ms782/express-mongo-typescript/blob/bb5e7088dc8ff47d042a67a0a68aadeb2793c0e8/src/facades/gameFacade.ts#L240"><em>facade</em></a> <a href="https://github.com/cph-ms782/express-mongo-typescript/blob/bb5e7088dc8ff47d042a67a0a68aadeb2793c0e8/src/routes/gameApi.ts#L98"><em>REST</em></a></li>
+<li>hvilke punkter er indenfor en geometri. <a href="https://github.com/cph-ms782/express-mongo-typescript/blob/bb5e7088dc8ff47d042a67a0a68aadeb2793c0e8/src/facades/gameFacade.ts#L254"><em>facade</em></a> REST er overtaget af mongoDB versionen nedenunder</li>
+</ul>
+<p>Kode <a href="http://./src/facades/gameFacade.ts"><em>facade</em></a>  <a href="http://./src/routes/gameApi.ts"><em>REST API</em></a></p>
+<p><strong>TODO : demonstrate</strong></p>
+
+<p>     <em>  </em>Explain and demonstrate a REST API that implements geo-features, using Mongodb’s geospatial queries and indexes.</p>
+<p>Med mongoDB kan man gemme lokationer og finde interne relationer imellem disse. Ved at oprette geo-indexes (som f.eks. {location: &quot;2dsphere&quot;}), kan man søge på disse ved hjælp af mongoDB commandoer som .<strong>find()</strong> eller .<strong>findAndUpdateUser()</strong>. I søgningen kan man specificere om man vil sætte en position ( $<strong>set</strong>: {position} eller finde personer i nærheden ($<strong>near</strong>: {$<strong>geometry</strong>, $<strong>maxDistance</strong>} ).</p>
+<p>Man kan sætte nogle options ved disse søgninger. <strong>upsert</strong> sørger for at der oprettes et nyt dokument hvis det ikke findes i forvejen, og <strong>returnOriginal</strong> der returnerer det opdaterede værdig (i modsætning til default der er at returnere den gamle værdi)<strong>e</strong></p>
+<ul>
+<li>Spillere i nærheden <a href="https://github.com/cph-ms782/express-mongo-typescript/blob/bb5e7088dc8ff47d042a67a0a68aadeb2793c0e8/src/facades/gameFacade.ts#L72"><em>facade</em></a> <a href="https://github.com/cph-ms782/express-mongo-typescript/blob/bb5e7088dc8ff47d042a67a0a68aadeb2793c0e8/src/facades/gameFacade.ts#L121"><em>query</em></a> <a href="https://github.com/cph-ms782/express-mongo-typescript/blob/bb5e7088dc8ff47d042a67a0a68aadeb2793c0e8/src/routes/gameApi.ts#L52"><em>REST</em></a></li>
+</ul>
+<p><strong>TODO : demonstrate</strong></p>
