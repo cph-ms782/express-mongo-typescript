@@ -1,37 +1,35 @@
 cph-ms782, Martin Bøgh Sander-Thomsen
 
-#Fullstack Javascript
+# Fullstack Javascript
 
 ## Period-2
 
-[]{#anchor-2}Node, Express with TypeScript, JavaScript Backend Testing,
-MongoDB and Geo-location
+### Node, Express with TypeScript, JavaScript Backend Testing, MongoDB and Geo-location
 
 Explain Pros & Cons in using Node.js + Express to implement your Backend
 compared to a strategy using, for example, Java/JAX-RS/Tomcat
 
 **Pros:**
 
--   Det er lettere at sætte op og køre
+-   **Det er lettere at sætte op og køre
 -   Du kan vedhæfte parametre til request om objektet under kørsel
-    (f.eks. tilføjelse af brugerrolle)
+    (f.eks. tilføjelse af brugerrolle)**
 
 **Cons:**
 
 -   Ved heftig trafik er det ikke så velegnet
 
 Explain the difference between *Debug outputs* and *ApplicationLogging*.
-What's wrong with console.log(..) statements in our backend code.
-
-***console.log(...) statements blokerer kode flow, i et setup der ellers
-er meningen skal være non-blocking.***
+What's wrong with console.log(..) statements in our backend code.  
+**console.log(...) statements blokerer kode flow, i et setup der ellers
+er meningen skal være non-blocking.**
 
 Demonstrate a system using application logging and environment
 controlled debug statements.
 
 TODO link
 
-[app.ts](http://docs.google.com/week10+11/express-exercises-day1/src/app.ts)
+[app.ts](./week10+11/express-exercises-day1/src/app.ts)
 
 [logger.ts](http://docs.google.com/week10+11/express-exercises-day1/src/middlewares/logger.ts)
 
@@ -57,7 +55,7 @@ assert](http://docs.google.com/week10+11/express-exercises-day1/test/simpleDemo.
 [Mocha
 Chai](http://docs.google.com/week10+11/express-exercises-day1/test/simpleDemoWithChai.ts)
 
-\*\* Example async:\*\*
+**Example async:**
 
 it("Should eventually find number of files in temp folder \" + folder,
 async function () { try { const files: any = findFiles("./\" + folder,
@@ -93,12 +91,11 @@ including how to solve the following deployment problems:
 -   Ensure that your Node-process restarts after a (potential) exception
     that closed the application
 
-Ved at bruge pm2 på serveren
+    **Ved at bruge pm2 på serveren**
 
 -   Ensure that your Node-process restarts after a server (Ubuntu)
     restart
-
-Ved at bruge pm2 på serveren
+    **Ved at bruge pm2 på serveren**
 
 -   Ensure that you can run "many" node-applications on a single droplet
     on the same port (80)
