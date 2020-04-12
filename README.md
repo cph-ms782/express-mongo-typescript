@@ -233,7 +233,7 @@ skal med en relational database.
 
 -   Ting går lidt hurtigere (hvis man har valgt det rigtige scenarie)
 -   kan håndtere store mængder data
--   behøver ikke at bruge et bestemt skema at lægge data ind \#\#todo
+-   behøver ikke at bruge et bestemt skema at lægge data ind
 
 #### Explain about indexes in MongoDB, how to create them, and *demonstrate* how you have used them.
 
@@ -388,7 +388,7 @@ beregninger, som;
 Kode [*facade*](./src/facades/gameFacade.ts) - [*REST
 API*](./src/routes/gameApi.ts)
 
-**TODO : demonstrate**
+
 
 #### Explain and demonstrate a REST API that implements geo-features, using Mongodb's geospatial queries and indexes.**  
 Med mongoDB kan man gemme lokationer og finde interne relationer imellem
@@ -407,5 +407,3 @@ til default der er at returnere den gamle værdi)**e**
     [*facade*](https://github.com/cph-ms782/express-mongo-typescript/blob/bb5e7088dc8ff47d042a67a0a68aadeb2793c0e8/src/facades/gameFacade.ts#L72)  
     [*query*](https://github.com/cph-ms782/express-mongo-typescript/blob/bb5e7088dc8ff47d042a67a0a68aadeb2793c0e8/src/facades/gameFacade.ts#L121)  
     [*REST*](https://github.com/cph-ms782/express-mongo-typescript/blob/bb5e7088dc8ff47d042a67a0a68aadeb2793c0e8/src/routes/gameApi.ts#L52)
-
-**TODO : demonstrate**
