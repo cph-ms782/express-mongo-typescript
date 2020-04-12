@@ -74,6 +74,15 @@ skriver man de variable som ikke må ses i koden, men som koden skal
 kunne tilgå.
 
 #### Explain, preferably using an example, how you have deployed your node/Express applications, and which of the Express Production best practices you have followed.
+[deployed server](https://express1.sandersolutions.dk/)
+Best practices:
+
+-   pm2 til at genstarte app ved nedbrud eller genstarte
+-   der er brugt ssl til cryptering af forbindelsen mellem server og klient
+-   der er brugt helmet middleware til at sætte flere sikkerheds http headers
+-   der er brugt async funktioner hvor det er muligt
+-   der er brugt en reverse proxy
+
 
 #### Explain possible steps to deploy many node/Express servers on the same droplet, how to deploy the code and how to ensure servers will continue to operate, even after a droplet restart.
 
