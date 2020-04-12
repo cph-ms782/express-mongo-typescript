@@ -51,25 +51,27 @@ assert](./week10+11/express-exercises-day1/test/simpleDemo.ts)
 [Mocha
 Chai](./week10+11/express-exercises-day1/test/simpleDemoWithChai.ts)
 
-**Example async:**
+**Eksempel på async test:**  
 it("Should eventually find number of files in temp folder \" + folder,
-async function () { try { const files: any = findFiles("./\" + folder,
+async function () {  
+ try { const files: any = findFiles("./\" + folder,
 ".txt");
 
-expect(files.length).to.be.equal(5); } catch (err) { //Observe -- normal
-try-catch, when you use async-await // expect(err).to.be.equal("Wrong
-arguments"); }})
+>expect(files.length).to.be.equal(5);   
+} catch (err) {  
+  //Observe -- normal try-catch, when you use async-await
+expect(err).to.be.equal("Wrong
+arguments");   
+}})
 
 [REST
-test](http://docs.google.com/week10+11/express-exercises-day1/test/simpleRestTest.ts)
+test](./week10+11/express-exercises-day1/test/simpleRestTest.ts)
 
 #### Explain a setup for Express/Node/Test/Mongo-DB development with Typescript, and how it handles \"secret values\", debug and testing.
 
 Secret values håndteres via en skjult fil på serverne kaldet env. I den
 skriver man de variable som ikke må ses i koden, men som koden skal
 kunne tilgå.
-
-( )
 
 #### Explain, preferably using an example, how you have deployed your node/Express applications, and which of the Express Production best practices you have followed.
 
@@ -78,38 +80,35 @@ kunne tilgå.
 #### Explain, your chosen strategy to deploy a Node/Express application
 including how to solve the following deployment problems:
 
--   Ensure that your Node-process restarts after a (potential) exception
-    that closed the application  
-
+-   **Ensure that your Node-process restarts after a (potential) exception
+    that closed the application**
     **Ved at bruge pm2 på serveren**
 
--   Ensure that your Node-process restarts after a server (Ubuntu)
-    restart  
+-   **Ensure that your Node-process restarts after a server (Ubuntu)
+    restart**  
     **Ved at bruge pm2 på serveren**
 
--   Ensure that you can run "many" node-applications on a single droplet
-    on the same port (80)  
-
-**I Digital Ocean dns server indstilles hvert sub-domæne til at pege på
+-   **Ensure that you can run "many" node-applications on a single droplet
+    on the same port (80)**  
+    I Digital Ocean dns server indstilles hvert sub-domæne til at pege på
 den samme droplet (**express1**.server.com, **express2**.server.com
 osv).
 
-Ved at ændre i nginx opsætningen på linux serveren, så den kan kan
+  Ved at ændre i nginx opsætningen på linux serveren, så den kan kan
 håndtere forskellige sub-domæner. Første domæne vil have følgende
-opsætningen i */etc/nginx/sites-enabled/default*. Express1 og port
-5000. Den næste vil hedde express2 og 5002.
+opsætningen i */etc/nginx/sites-enabled/default*. Express1 og port 5000. Den næste vil hedde express2 og 5002.
 
-Start flere express servere med forskellige portnumre (5000 og 5001)**
+  Start flere express servere med forskellige portnumre (5000 og 5001)**
 
-> server\_name **express1**.server.com;  
-location / {  
-proxy\_pass http://localhost:**5000**;  
-proxy\_http\_version 1.1;  
-proxy\_set\_header Upgrade \$http\_upgrade;  
-proxy\_set\_header Connection \'upgrade\';  
-proxy\_set\_header Host \$host;  
-proxy\_cache\_bypass \$http\_upgrade;  
-}  
+  > server\_name **express1**.server.com;  
+  location / {  
+  proxy\_pass http://localhost:**5000**;  
+  proxy\_http\_version 1.1;  
+  proxy\_set\_header Upgrade \$http\_upgrade;  
+  proxy\_set\_header Connection \'upgrade\';  
+  proxy\_set\_header Host \$host;  
+  proxy\_cache\_bypass \$http\_upgrade;  
+  }  
 
 #### Explain, using relevant examples, the Express concept; middleware.
 
@@ -118,56 +117,53 @@ objektet møder den første kode og før routing delen. Middleware'n sender
 bolden videre til næste middleware eller til routingen ved hjælp af
 funktionen **next(),** og man kan f.eks. indsætte et sikkerheds lag her.
 
-[*Visual Code*](http://./src/app.ts)
+[*Visual Code*](./src/app.ts) -
 [*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/app.ts#L12)
 
-#### Explain, using relevant examples, your strategy for implementing a
-REST-API with Node/Express + TypeScript and demonstrate how you have
-tested the API.
-
-NodeJS app'en starter i trypescript filen app.ts. Routing foregår i
+#### Explain, using relevant examples, your strategy for implementing a REST-API with Node/Express + TypeScript and demonstrate how you have tested the API.
+NodeJS app'en starter i typescript filen app.ts. Routing foregår i
 denne fil, men bliver udgrenet i underfiler for ikke at app.ts bliver
 for uoverskuelig.
 
-![](Pictures/10000000000001B700000105DD85AC709776E038.png)
+![](./static/routing.png)
 
-[*Visual Code*](http://./src/app.ts)
+[*Visual Code*](./src/app.ts) -
 [*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/app.ts#L20)
 
 Tests ligger i rodfolderen **/test**. Alle tests der ligger heri bliver
 udført, pånær hvis man f.eks giver dem typen .xx.
 
-![](Pictures/1000000000000290000000527404C4BC232C047C.png)
+![](./static/test_three-_users.png)
 
 Eksempel på enkelt REST API GET test af **/api/users** ([*Visual
-Code*](http://./test/endpointTest.ts)
-[*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/test/endpointTest.ts#L113)).
+Code*](./test/endpointTest.ts) -
+[*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/test/endpointTest.ts#L113)).  
 Normalt behøves der ikke at komme en options del med i requestet (ses
 som auth i ovenstående billede), men da der er authentication på siden,
 så ville testen fejle hvis denne authentication var slået til.
 
 Auth delen ser således ud ([*Visual
-Code*](http://./test/gameFacadeTest.ts)
+Code*](./test/gameFacadeTest.ts) -
 [*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/test/endpointTest.ts#L26)):
 
-![](Pictures/10000000000001BF0000013D3BAB71E7B1696435.png)
+![](./static/userAuth.png)
 
 userAuth, der også bruges flere steder i tests (se eksempel længere
 nede), er keypairet **bruger:kodeord** lavet om til base64 encoding, som
 basic http authentication kan læse ([*Visual
-Code*](http://./src/utils/makeBase64.ts)
+Code*](./src/utils/makeBase64.ts) -
 [*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/utils/makeBase64.ts#L1)):
 
-![](Pictures/100000000000029F000000A1476B9353733B29F2.png)
+![](./static/100000000000029F000000A1476B9353733B29F2.png)
 
 Eksempel på både GET og POST request tests af /api/users/:userName
-([*Visual Code*](http://test/endpointTest.ts)
+([*Visual Code*](./test/endpointTest.ts) -
 [*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/test/endpointTest.ts#L118)).
 Først POST'es en ny bruger ind. Bemærk {'Autherization': userAuth}, hvor
 et base64 bruger:kodeord keypair sendes videre i headeren. Dette
 efterfølges af en GET test på om den nye bruger kan findes:
 
-![](Pictures/100000000000032D0000013527D3AD1D8D620CEF.png)
+![](./static/100000000000032D0000013527D3AD1D8D620CEF.png)
 
 #### Explain, using relevant examples, how to test JavaScript/Typescript Backend Code, relevant packages (Mocha, Chai etc.) and how to test asynchronous code.
 
@@ -184,10 +180,10 @@ Se fra ovenstående billede:
 **expect**(jan.name)**.to.be.equal**(\"Jan Olsen\")
 
 Kan også opfange exceptions ([*Visual
-Code*](http://test/gameFacadeTest.ts)
+Code*](./test/gameFacadeTest.ts) -
 [*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/test/gameFacadeTest.ts#L118)):
 
-![](Pictures/1000000000000289000000F94747F973C02657C3.png)
+![](./static/1000000000000289000000F94747F973C02657C3.png)
 
 NoSQL and MongoDB
 
@@ -229,31 +225,31 @@ De bruges i mondoDB metoder som f.eks .**find()** eller
 som oprettet i ovenstående.
 
 Her ses en søgning på location indexet ([*Visual
-Code*](http://src/facades/gameFacade.ts)
+Code*](./src/facades/gameFacade.ts) -
 [*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/facades/gameFacade.ts#L182)):
 
-![](Pictures/10000000000002A20000017F28C99709304CA7E3.png)
+![](./static/10000000000002A20000017F28C99709304CA7E3.png)
 
 #### Explain*, *using your own code* examples, how you have used some of MongoDB\'s \"special\" indexes like *TTL* and *2dsphere and perhaps also the Unique Index.*
 
 TTL og 2dsphere er vist i ovenstående. Unique er brugt ved oprettelse af
 en bruger, så der sikres at et værdi indsat i databasen kun kan bruges
-een gang ([*Visual Code*](http://src/facades/userFacadeWithDB.ts)
+een gang ([*Visual Code*](./src/facades/userFacadeWithDB.ts) -
 [*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/facades/userFacadeWithDB.ts#L25)):
 
-![](Pictures/100000000000024A0000002C24023F28A5B0DF4D.png)
+![](./static/100000000000024A0000002C24023F28A5B0DF4D.png)
 
 #### Demonstrate, using a REST-API *you have designed*, how to perform all CRUD operations on a MongoDB
 
 **CR**eate: Oprettelse af bruger:
 
--   REST ([*Visual Code*](http://src/routes/userApiDB.ts)
+-   REST ([*Visual Code*](./src/routes/userApiDB.ts) -
     [*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/routes/userApiDB.ts#L21))
     POST /api/users. Sender et bruger objekt videre som opfylder kravene
     til at være en **IGameUser** ([*Visual
-    Code*](http://src/interfaces/GameUser.ts)
+    Code*](http://src/interfaces/GameUser.ts) -
     [*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/interfaces/GameUser.ts#L1))
--   backend ([*Visual Code*](http://src/facades/userFacadeWithDB.ts)
+-   backend ([*Visual Code*](http://src/facades/userFacadeWithDB.ts) -
     [*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/facades/userFacadeWithDB.ts#L35)).
     addUser() modtager brugeren og opretter vedkommende med krypteret
     kodeord. Mongo metoden **insertOne** bruges til at oprette og
@@ -262,11 +258,11 @@ een gang ([*Visual Code*](http://src/facades/userFacadeWithDB.ts)
 **U**pdate: Oprettelse af en position eller opdatering af eksisterende,
 når der søges på omkringliggende brugere:
 
--   REST ([*Visual Code*](http://src/routes/userApiDB.ts)
+-   REST ([*Visual Code*](./src/routes/userApiDB.ts) -
     [*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/routes/gameApi.ts#L52))
     POST **/api/users/nearbyplayers** med auth info og lon/lat og
     distance sendes videre til **nearbyPlayers()** i facaden
--   backend ([*Visual Code*](http://src/facades/gameFacade.ts)
+-   backend ([*Visual Code*](./src/facades/gameFacade.ts) -
     [*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/facades/gameFacade.ts#L72)
     og
     [*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/facades/gameFacade.ts#L151))
@@ -277,13 +273,12 @@ når der søges på omkringliggende brugere:
 
 **D**elete: Fjernelse af en bruger:
 
--   REST ([*Visual Code*](http://src/routes/userApiDB.ts)
-    [*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/routes/userApiDB.ts#L99))
+-   REST ([*Visual Code*](./src/routes/userApiDB.ts) - [*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/routes/userApiDB.ts#L99))
     DELETE /**api/users/:userName** sender brugernavn videre til
     **userFacade.deleteUser()** (hvis auth er slået til skal man være
     admin), userName kommer fra URL parameter og admin role kommer fra
     request objektet.
--   backend ([*Visual Code*](http://src/facades/userFacadeWithDB.ts)
+-   backend ([*Visual Code*](./src/facades/userFacadeWithDB.ts)
     [*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/facades/userFacadeWithDB.ts#L50))
     **deleteUser**() benytter mongo metoden .**findOneAndDelete()** til
     at fjerne en bruger. Der kommer en exception hvis brugeren ikke kan
@@ -304,14 +299,14 @@ I dette tilfælde er det mere en normalisering af domænemodellen. Task og
 Point der kunne have været hver for sig i en normaliseret database,
 samles i en collection kaldet "posts". Det ses i funktionen
 **getPostIfReached()** ([*Visual
-Code*](http://./src/facades/gameFacade.ts)
+Code*](./src/facades/gameFacade.ts) -
 [*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/6b867e37f67de4ec3cabf150095a33e9c5ef9336/src/facades/gameFacade.ts#L174)
 nedenstående billede) . Point delen bruges til at finde posten og task
 delen til at svare tilbage hvis posten bliver fundet.
 
-![](Pictures/100000000000030B0000022930766C7906C8E49D.png)
+![](./static/100000000000030B0000022930766C7906C8E49D.png)
 
-[]{#anchor-3}Geo-location and Geojson
+## Geo-location and Geojson
 
 #### Explain and demonstrate basic Geo-JSON, involving as a minimum, Points and Polygons
 
@@ -329,32 +324,31 @@ langt ude i fremtiden, så den ikke forsvinder så hurtigt, når der
 testes.
 
 [*Opretning af test
-data*](https://github.com/cph-ms782/express-mongo-typescript/blob/bb5e7088dc8ff47d042a67a0a68aadeb2793c0e8/test/gameFacadeTest.ts#L52)
-[*positionCreator*](https://github.com/cph-ms782/express-mongo-typescript/blob/bb5e7088dc8ff47d042a67a0a68aadeb2793c0e8/src/utils/geoUtils.ts#L19)
-
-[*Test kode*](http://./test/gameFacadeTest.ts)
+data*](https://github.com/cph-ms782/express-mongo-typescript/blob/bb5e7088dc8ff47d042a67a0a68aadeb2793c0e8/test/gameFacadeTest.ts#L52)  
+[*positionCreator*](https://github.com/cph-ms782/express-mongo-typescript/blob/bb5e7088dc8ff47d042a67a0a68aadeb2793c0e8/src/utils/geoUtils.ts#L19)  
+[*Test kode*](./test/gameFacadeTest.ts)
 
 #### Explain the typical order of longitude and latitude used by Server-Side API's and Client-Side API's
--   **longitude, latitude (som X,Y) brugt af de fleste formater og er Open
-Geospatial Consortium's anbefaling**
--   **latitude, longitude (som Y,X) brugt især af Google, map software og
-client-side teknologier (inkl. Airbnb's, google maps)**
--   **Udvikleren er ansvarlig for at finde ud af, hvad der bruges.**
+-   longitude, latitude (som X,Y) brugt af de fleste formater og er Open
+Geospatial Consortium's anbefaling
+-   latitude, longitude (som Y,X) brugt især af Google, map software og
+client-side teknologier (inkl. Airbnb's, google maps)
+-   Udvikleren er ansvarlig for at finde ud af, hvad der bruges.
 
 
 #### Explain and demonstrate a REST API that implements geo-features, using a relevant geo-library and plain JavaScript
-**Ved hjælp af npm modulet 'geojson-utils' kan man lave let lave geo
+Ved hjælp af npm modulet 'geojson-utils' kan man lave let lave geo
 beregninger, som;
 
 -   hvor langt er der imellem to punkter
-    [*facade*](https://github.com/cph-ms782/express-mongo-typescript/blob/bb5e7088dc8ff47d042a67a0a68aadeb2793c0e8/src/facades/gameFacade.ts#L273)
+    [*facade*](https://github.com/cph-ms782/express-mongo-typescript/blob/bb5e7088dc8ff47d042a67a0a68aadeb2793c0e8/src/facades/gameFacade.ts#L273) -
     [*REST*](https://github.com/cph-ms782/express-mongo-typescript/blob/bb5e7088dc8ff47d042a67a0a68aadeb2793c0e8/src/routes/gameApi.ts#L70)
 -   er et punkt indenfor en geometri
-    [*facade*](https://github.com/cph-ms782/express-mongo-typescript/blob/bb5e7088dc8ff47d042a67a0a68aadeb2793c0e8/src/facades/gameFacade.ts#L240)
+    [*facade*](https://github.com/cph-ms782/express-mongo-typescript/blob/bb5e7088dc8ff47d042a67a0a68aadeb2793c0e8/src/facades/gameFacade.ts#L240) -
     [*REST*](https://github.com/cph-ms782/express-mongo-typescript/blob/bb5e7088dc8ff47d042a67a0a68aadeb2793c0e8/src/routes/gameApi.ts#L98)
 -   hvilke punkter er indenfor en geometri.
     [*facade*](https://github.com/cph-ms782/express-mongo-typescript/blob/bb5e7088dc8ff47d042a67a0a68aadeb2793c0e8/src/facades/gameFacade.ts#L254)
-    REST er overtaget af mongoDB versionen nedenunder**
+    (REST er overtaget af mongoDB versionen nedenunder)
 
 Kode [*facade*](./src/facades/gameFacade.ts) - [*REST
 API*](./src/routes/gameApi.ts)
