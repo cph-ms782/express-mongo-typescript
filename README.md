@@ -154,16 +154,16 @@ basic http authentication kan læse ([*Visual
 Code*](./src/utils/makeBase64.ts) -
 [*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/utils/makeBase64.ts#L1)):
 
-![](./static/100000000000029F000000A1476B9353733B29F2.png)
+![](./static/base64.png)
 
 Eksempel på både GET og POST request tests af /api/users/:userName
 ([*Visual Code*](./test/endpointTest.ts) -
 [*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/test/endpointTest.ts#L118)).
-Først POST'es en ny bruger ind. Bemærk {'Autherization': userAuth}, hvor
+Først POST'es en ny bruger ind. Bemærk **{'Authorization': userAuth}**, hvor
 et base64 bruger:kodeord keypair sendes videre i headeren. Dette
 efterfølges af en GET test på om den nye bruger kan findes:
 
-![](./static/100000000000032D0000013527D3AD1D8D620CEF.png)
+![](./static/test_should_add_User_Jan.png)
 
 #### Explain, using relevant examples, how to test JavaScript/Typescript Backend Code, relevant packages (Mocha, Chai etc.) and how to test asynchronous code.
 
@@ -183,7 +183,7 @@ Kan også opfange exceptions ([*Visual
 Code*](./test/gameFacadeTest.ts) -
 [*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/test/gameFacadeTest.ts#L118)):
 
-![](./static/1000000000000289000000F94747F973C02657C3.png)
+![](./static/test_should_not_find.png)
 
 NoSQL and MongoDB
 
@@ -228,16 +228,16 @@ Her ses en søgning på location indexet ([*Visual
 Code*](./src/facades/gameFacade.ts) -
 [*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/facades/gameFacade.ts#L182)):
 
-![](./static/10000000000002A20000017F28C99709304CA7E3.png)
+![](./static/findOne.png)
 
-#### Explain*, *using your own code* examples, how you have used some of MongoDB\'s \"special\" indexes like *TTL* and *2dsphere and perhaps also the Unique Index.*
+#### Explain, using your own code examples, how you have used some of MongoDB\'s \"special\" indexes like *TTL* and *2dsphere and perhaps also the Unique Index.*
 
 TTL og 2dsphere er vist i ovenstående. Unique er brugt ved oprettelse af
 en bruger, så der sikres at et værdi indsat i databasen kun kan bruges
 een gang ([*Visual Code*](./src/facades/userFacadeWithDB.ts) -
 [*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/facades/userFacadeWithDB.ts#L25)):
 
-![](./static/100000000000024A0000002C24023F28A5B0DF4D.png)
+![](./static/createIndex.png)
 
 #### Demonstrate, using a REST-API *you have designed*, how to perform all CRUD operations on a MongoDB
 
@@ -304,7 +304,7 @@ Code*](./src/facades/gameFacade.ts) -
 nedenstående billede) . Point delen bruges til at finde posten og task
 delen til at svare tilbage hvis posten bliver fundet.
 
-![](./static/100000000000030B0000022930766C7906C8E49D.png)
+![](./static/getPostIfReached.png)
 
 ## Geo-location and Geojson
 
