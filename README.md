@@ -18,10 +18,9 @@ cph-ms782, Martin Bøgh Sander-Thomsen
 
 -   Ved heftig trafik er det ikke så velegnet
 
-#### Explain the difference between *Debug outputs* and *ApplicationLogging*.
-What's wrong with console.log(..) statements in our backend code.  
-**console.log(...) statements blokerer kode flow, i et setup der ellers
-er meningen skal være non-blocking.**
+#### Explain the difference between *Debug outputs* and *ApplicationLogging*. What's wrong with console.log(..) statements in our backend code.  
+console.log(...) statements blokerer kode flow, i et setup der ellers
+er meningen skal være non-blocking.
 
 
 #### Demonstrate a system using application logging and environment controlled debug statements.
@@ -74,7 +73,7 @@ skriver man de variable som ikke må ses i koden, men som koden skal
 kunne tilgå.
 
 #### Explain, preferably using an example, how you have deployed your node/Express applications, and which of the Express Production best practices you have followed.
-[deployed server](https://express1.sandersolutions.dk/)
+[deployed server](https://express1.sandersolutions.dk/)  
 Best practices:
 
 -   pm2 til at genstarte app ved nedbrud eller genstarte
@@ -82,6 +81,34 @@ Best practices:
 -   der er brugt helmet middleware til at sætte flere sikkerheds http headers
 -   der er brugt async funktioner hvor det er muligt
 -   der er brugt en reverse proxy
+
+Metode til at deploye:
+
+-   få dns til at pege på droplet og sæt nginx options til at håndtere dette request (se nedenfor).
+-   clone github project i en underfolder i brugers home folder.
+-   build manuelt typescript
+-   start app ved hjælp af pm2
+-   automatiser dette med et skript til fremtidig brug
+
+>echo "\nGo into apps folder"  
+cd apps  
+
+>echo "\ncloning repo from https://github.com/cph-ms782/express-mongo-typescript"  
+echo "if not existing"  
+git clone https://github.com/cph-ms782/express-mongo-typescript.git  
+
+>echo "\nGo into express express-mongo-typescript folder"   
+cd express-mongo-typescript  
+
+>echo "pull in latest updates"  
+git pull  
+
+>echo "\nbuild typescript"  
+npm run build  
+
+>echo "\nstart server if not already started"  
+pm2 start ./build/app.js --name express1 --watch --ignore-watch="node_modules"  
+pm2 status  
 
 
 #### Explain possible steps to deploy many node/Express servers on the same droplet, how to deploy the code and how to ensure servers will continue to operate, even after a droplet restart.
