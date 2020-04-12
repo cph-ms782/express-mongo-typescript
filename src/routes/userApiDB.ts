@@ -16,7 +16,7 @@ const USE_AUTHENTICATION : boolean = Boolean(process.env.USE_AUTHENTICATION);
 })()
 
 /**
- * login without auth
+ * add user without auth
  */
 router.post('/', async function (req, res, next) {
     try {
