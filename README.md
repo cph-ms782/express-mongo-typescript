@@ -82,15 +82,15 @@ including how to solve the following deployment problems:
 
 -   **Ensure that your Node-process restarts after a (potential) exception
     that closed the application**
-    **Ved at bruge pm2 på serveren**
+Ved at bruge pm2 på serveren
 
 -   **Ensure that your Node-process restarts after a server (Ubuntu)
     restart**  
-    **Ved at bruge pm2 på serveren**
+Ved at bruge pm2 på serveren
 
 -   **Ensure that you can run "many" node-applications on a single droplet
     on the same port (80)**  
-    I Digital Ocean dns server indstilles hvert sub-domæne til at pege på
+I Digital Ocean dns server indstilles hvert sub-domæne til at pege på
 den samme droplet (**express1**.server.com, **express2**.server.com
 osv).
 
@@ -187,19 +187,19 @@ Code*](./test/gameFacadeTest.ts) -
 
 NoSQL and MongoDB
 
-#### Explain*, generally, what is meant by a NoSQL database.
+#### Explain, generally, what is meant by a NoSQL database.
 
 En NoSQL-database er en database der giver dig mulighed for at gemme og
 hente data, der ikke er omhyggeligt modelleret på en tabelform, som du
 skal med en relational database.
 
-#### Explain* Pros & Cons in using a NoSQL database like MongoDB as your data store, compared to a traditional Relational SQL Database like MySQL.
+#### Explain Pros & Cons in using a NoSQL database like MongoDB as your data store, compared to a traditional Relational SQL Database like MySQL.
 
 -   Ting går lidt hurtigere (hvis man har valgt det rigtige scenarie)
 -   kan håndtere store mængder data
 -   behøver ikke at bruge et bestemt skema at lægge data ind \#\#todo
 
-#### Explain* about indexes in MongoDB, how to create them, and *demonstrate* how you have used them.
+#### Explain about indexes in MongoDB, how to create them, and *demonstrate* how you have used them.
 
 Indexes gør det let for mongoDB at udføre søgninger. Uden disse ville
 databasen skulle igennem alle datasæt for at finde den ønskede data:
@@ -247,9 +247,9 @@ een gang ([*Visual Code*](./src/facades/userFacadeWithDB.ts) -
     [*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/routes/userApiDB.ts#L21))
     POST /api/users. Sender et bruger objekt videre som opfylder kravene
     til at være en **IGameUser** ([*Visual
-    Code*](http://src/interfaces/GameUser.ts) -
+    Code*](./src/interfaces/GameUser.ts) -
     [*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/interfaces/GameUser.ts#L1))
--   backend ([*Visual Code*](http://src/facades/userFacadeWithDB.ts) -
+-   backend ([*Visual Code*](./src/facades/userFacadeWithDB.ts) -
     [*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/ac56c3f566185555d7b482c8d708ad933302b115/src/facades/userFacadeWithDB.ts#L35)).
     addUser() modtager brugeren og opretter vedkommende med krypteret
     kodeord. Mongo metoden **insertOne** bruges til at oprette og
@@ -284,8 +284,7 @@ når der søges på omkringliggende brugere:
     at fjerne en bruger. Der kommer en exception hvis brugeren ikke kan
     findes.
 
-#### Demonstrate, using your own code-samples, decisions you have made
-regarding → normalization vs denormalization
+#### Demonstrate, using your own code-samples, decisions you have made regarding → normalization vs denormalization
 
 WIKI: Denormalization er en strategi, der bruges i en tidligere
 normaliseret database for at øge ydelsen. Ved beregning er
@@ -325,7 +324,7 @@ testes.
 
 [*Opretning af test
 data*](https://github.com/cph-ms782/express-mongo-typescript/blob/bb5e7088dc8ff47d042a67a0a68aadeb2793c0e8/test/gameFacadeTest.ts#L52)  
-[*positionCreator*](https://github.com/cph-ms782/express-mongo-typescript/blob/bb5e7088dc8ff47d042a67a0a68aadeb2793c0e8/src/utils/geoUtils.ts#L19)  
+[*positionCreator*](https://github.com/cph-ms782/express-mongo-typescript/blob/bb5e7088dc8ff47d042a67a0a68aadeb2793c0e8/src/utils/geoUtils.ts#L19) der bruges til at oprette et point objekt at typen IPosition  
 [*Test kode*](./test/gameFacadeTest.ts)
 
 #### Explain the typical order of longitude and latitude used by Server-Side API's and Client-Side API's
