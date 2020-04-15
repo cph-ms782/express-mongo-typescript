@@ -317,4 +317,27 @@ describe("verify all endpoints", () => {
     }
   })
 
+  /**
+ * updating location
+ */
+  describe("Verify location updating endpoints", () => {
+    it("Should update location", async () => {
+      const position = { "userName": "t1", "lon": 12.49, "lat": 55.75 }
+      const config = {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': userAuth,
+        },
+        body: JSON.stringify(position)
+      }
+      const result = await fetch(`${URL}/gameapi/updateposition`, config).then(r => r.json());
+      console.log("Should update location endpoint", result)
+      expect(result.userName).to.be.equal("t1")
+      expect(result.lon).to.be.equal(12.49)
+      expect(result.lat).to.be.equal(55.75)
+    })
+  })
+
 })

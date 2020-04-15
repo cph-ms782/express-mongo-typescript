@@ -151,11 +151,11 @@ export default class GameFacade {
     static async findAndUpdateUser(userName: string, position: IPosition): Promise<boolean> {
         const found: any = await positionCollection.findOneAndUpdate(
             { userName },
-            { $set: { position } },
+            { $set: {location: position } },
             { upsert: true, returnOriginal: false },
             function (err, doc) {
                 if (err) {
-                    throw new ApiError("Error in deleting user", 400);
+                    throw new ApiError("Error in updating user", 400);
                 } else {
                     console.log("Updated");
                     return false;
@@ -196,6 +196,49 @@ export default class GameFacade {
                 throw new ApiError("Post not reached", 400);
             }
             return { postId: post._id, task: post.task.text, isUrl: post.task.isUrl };
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+     * 
+     * @param userName 
+     * @param lon 
+     * @param lat 
+     */
+    static async updateLocation(userName: string, lon: number, lat: number): Promise<any> {
+        const positionGeometry: any = {
+            type: "Point",
+            coordinates: [
+                lon,
+                lat
+            ]
+        };
+        try {
+            const found: any = await positionCollection.findOneAndUpdate(
+                { userName },
+                { $set: {location: positionGeometry } },
+                { upsert: true, returnOriginal: false },
+                // function (err, doc) {
+                //     if (err) {
+                //         throw new ApiError("Error in updating user", 400);
+                //     } else {
+                //         console.log("Updated");
+                //         return doc;
+                //     }
+                // }
+            );
+            if (found === null || found === undefined) {
+                throw new ApiError("User not updated", 400);
+            }
+            const result: any = {
+                userName: found.value.userName,
+                lon: found.value.location.coordinates[0],
+                lat: found.value.location.coordinates[1],
+            }
+            return result;
+
         } catch (err) {
             throw err;
         }

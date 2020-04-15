@@ -125,4 +125,18 @@ describe("Verify the GameFacade", () => {
       }
     })
   })
+
+
+  /**
+   * updating location
+   */
+  describe("Verify location updating facade", () => {
+    it("Should update location", async () => {
+      const updated = await GameFacade.updateLocation("t1", 13.0, 15.0)
+      console.log("Should update location", updated)
+      expect(updated.userName).to.be.equal("t1")
+      expect(updated.lon).to.be.equal(13.0)
+      expect(updated.lat).to.be.equal(15.0)
+    })
+  })
 })

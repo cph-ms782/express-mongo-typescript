@@ -65,6 +65,22 @@ router.post('/nearbyplayers', async (req: any, res: any, next: any) => {
 })
 
 /**
+ * 
+ */
+router.post('/updateposition', async (req: any, res: any, next: any) => {
+    try {
+        const foundPosition: any[] = await gameFacade.updateLocation(
+            req.body.userName,
+            req.body.lon,
+            req.body.lat,
+        );
+        return res.json(foundPosition);
+    } catch (err) {
+        next(err);
+    }
+})
+
+/**
  *  Find Distance between caller, and another player
  */
 router.get('/distancetouser/:lon/:lat/:username', async (req: any, res: any, next: any) => {
