@@ -1,75 +1,87 @@
 export const gameArea: any = {
-	type: 'FeatureCollection',
-	features: [
-		{
-			type: 'Feature',
-			properties: {},
-			geometry: {
-				type: 'Polygon',
-				coordinates: [
-					[
-						[12.53591537475586, 55.78863940650064],
-						[12.518405914306639, 55.767689769836],
-						[12.555656433105469, 55.75523050030093],
-						[12.581405639648438, 55.76402001102562],
-						[12.589130401611328, 55.781689623414294],
-						[12.580375671386719, 55.79529845202839],
-						[12.53591537475586, 55.78863940650064]
-					]
-				]
-			}
-		}
-	]
-};
-
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          12.544240951538086,
+          55.77594546428934
+        ],
+        [
+          12.549219131469727,
+          55.77502825125135
+        ],
+        [
+          12.568359375,
+          55.77604201177451
+        ],
+        [
+          12.578487396240234,
+          55.7767661102896
+        ],
+        [
+          12.573423385620117,
+          55.79467119920912
+        ],
+        [
+          12.57059097290039,
+          55.795877445664104
+        ],
+        [
+          12.544240951538086,
+          55.77594546428934
+        ]
+      ]
+    ]
+  }
 export const players: any[] = [
-	{
-		"type": "Feature",
-		"properties": { "name": "Peter Pan" },
-		"geometry": {
-			"type": "Point",
-			"coordinates": [
-				12.5695454,
-				55.7721959
-			]
-		}
-	},
-	{
-		"type": "Feature",
-		"properties": { "name": "Donald Duck" },
-		"geometry": {
-			"type": "Point",
-			"coordinates": [
-				12.568630,
-				55.776643
-			]
-		}
-	},
-	{
-		"type": "Feature",
-		"properties": { "name": "Petine" },
-		"geometry": {
-			"type": "Point",
-			"coordinates": [
-				12.564826,
-				56.776258
-			]
-		}
-	},
-	{
-		"type": "Feature",
-		"properties": { "name": "admin" },
-		"geometry": {
-			"type": "Point",
-			"coordinates": [
-				13.562328,
-				55.777029
-			]
-		}
-	},
+{
+  "type": "Feature",
+  "properties": {
+    "name": "Team1-inside"
+  },
+  "geometry": {
+    "type": "Point",
+    "coordinates": [
+      12.567672729492188,
+      55.78670903555303
+    ]
+  }
+},
+{
+  "type": "Feature",
+  "properties": {
+    "name": "Team2-inside"
+  },
+  "geometry": {
+    "type": "Point",
+    "coordinates": [
+      12.561578750610352,
+      55.779758908094266
+    ]
+  }
+},
+{
+  "type": "Feature",
+  "properties": {"name":"Team3-outside"},
+  "geometry": {
+    "type": "Point",
+    "coordinates": [
+      12.551965713500977,
+      55.788349856956444
+    ]
+  }
+},
+{
+  "type": "Feature",
+  "properties": {"name":"Team4-outside"},
+  "geometry": {
+    "type": "Point",
+    "coordinates": [
+      12.568788528442383,
+      55.77396618813479
+    ]
+  }
+}
 ]
 
-
-// export default {
-// 	gameArea, players
-// };
+// module.exports = {gameArea,players}

@@ -22,6 +22,20 @@ if (USE_AUTHENTICATION) {
     router.use(authMiddleware)
 }
 
+interface IPolygonForClient {
+    [coordinates: string]: number
+}
+
+const polygonForClient: IPolygonForClient = {};
+polygonForClient.coordinates = gameArea.coordinates[0].map(point => {
+  return {latitude: point[1],longitude: point[0]}
+})
+
+//Returns a polygon, representing the gameArea
+router.get("/gamearea",(req,res)=>{
+  res.json(polygonForClient);
+});
+
 /**
  *   Find Players near the caller using coordinates
  */
