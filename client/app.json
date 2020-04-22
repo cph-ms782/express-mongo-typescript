@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "RN Complete Guide",
-    "slug": "rn-complete-guide",
+    "name": "client-location-noDB",
+    "slug": "client-location-noDB",
     "platforms": [
       "ios",
       "android",
