@@ -65,13 +65,21 @@ router.get('/findnearbyplayers/:lon/:lat/:rad', async (req: any, res: any, next:
  */
 router.post('/nearbyplayers', async (req: any, res: any, next: any) => {
     try {
-        const foundPlayer: any[] = await gameFacade.nearbyPlayers(
-            req.body.userName,
-            req.body.password,
-            req.body.lon,
-            req.body.lat,
-            req.body.distance
-        );
+        const userName = req.body.userName;
+        const password = req.body.password;
+        const lon = req.body.lon;
+        const lat = req.body.lat;
+        const distance = req.body.distance;
+        let foundPlayer: any[] = []
+        if (userName && lon && lat && password && distance) {
+            foundPlayer = await gameFacade.nearbyPlayers(
+                userName,
+                password,
+                lon,
+                lat,
+                distance
+            );
+        }
         console.log("foundPlayer", foundPlayer)
         return res.json(foundPlayer);
     } catch (err) {
@@ -85,11 +93,17 @@ router.post('/nearbyplayers', async (req: any, res: any, next: any) => {
 router.post('/updateposition', async (req: any, res: any, next: any) => {
     console.log("updateposition")
     try {
-        const foundPosition: any[] = await gameFacade.updateLocation(
-            req.body.userName,
-            req.body.lon,
-            req.body.lat,
-        );
+        const userName = req.body.userName;
+        const lon = req.body.lon;
+        const lat = req.body.lat;
+        let foundPosition: any[] = []
+        if (userName && lon && lat) {
+            foundPosition = await gameFacade.updateLocation(
+                userName,
+                lon,
+                lat,
+            );
+        }
         console.log("foundPosition", foundPosition)
         return res.json(foundPosition);
     } catch (err) {
@@ -130,20 +144,18 @@ router.get('/distancetouser/:lon/:lat/:username', async (req: any, res: any, nex
  */
 router.get('/isuserinarea/:lon/:lat', async (req: any, res: any, next: any) => {
     try {
-        if (USE_AUTHENTICATION) {
-            const point: any = await gameFacade.makePoint(Number(req.params.lon), Number(req.params.lat));
-            const inside: any = await gameFacade.pointInPolygon(point, gameArea);
-            if (inside) {
-                return res.json({
-                    status: true,
-                    msg: 'Point was inside the tested polygon'
-                });
-            }
+        const point: any = await gameFacade.makePoint(Number(req.params.lon), Number(req.params.lat));
+        const inside: any = await gameFacade.pointInPolygon(point, gameArea);
+        if (inside) {
             return res.json({
-                status: false,
-                msg: 'Point was NOT inside tested polygon'
+                status: true,
+                msg: 'Point was inside the tested polygon'
             });
         }
+        return res.json({
+            status: false,
+            msg: 'Point was NOT inside tested polygon'
+        });
     } catch (err) {
         next(err);
     }

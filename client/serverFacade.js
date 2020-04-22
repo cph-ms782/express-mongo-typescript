@@ -13,18 +13,40 @@ const config = (user, password) => {
 	return header;
 };
 const postConfig = (userName, password, lon, lat) => {
-	let encodedAuth = base64.encode(user + ':' + password);
+	let encodedAuth = base64.encode(userName + ':' + password);
 
 	const headerBody = {
 		method: 'POST',
 		headers: {
-			Authorization: 'Basic ' + encodedAuth
+			"Authorization": 'Basic ' + encodedAuth,
+			"Content-Type": "application/json",
+			"Accept": "application/json",
 		},
-		body: {
-			userName: userName,
-			lon: lon,
-			lat: lat
-		}
+		body: JSON.stringify({
+			userName,
+			lon,
+			lat
+		})
+	};
+	return headerBody;
+};
+const postNearbyPlayersConfig = (userName, password, lon, lat, distance) => {
+	let encodedAuth = base64.encode(userName + ':' + password);
+
+	const headerBody = {
+		method: 'POST',
+		headers: {
+			"Authorization": 'Basic ' + encodedAuth,
+			"Content-Type": "application/json",
+			"Accept": "application/json",
+		},
+		body: JSON.stringify({
+			userName,
+			password,
+			lon,
+			lat,
+			distance
+		})
 	};
 	return headerBody;
 };
@@ -35,9 +57,21 @@ ServerFacade = () => {
    */
 
 	async function fetchPostUpdatePosition(userName, password, lon, lat) {
-		console.log("fetchPostUpdatePosition",userName, password, lon, lat )
-		const res = await fetch(`${SERVER_URL}/gameapi/updateposition`, postConfig(userName, password, lon, lat)).then((res) => res.json());
-		console.log("res", res)
+		console.log('fetchPostUpdatePosition', userName, password, lon, lat);
+		const res = await fetch(
+			`${SERVER_URL}/gameapi/updateposition`,
+			postConfig(userName, password, lon, lat)
+		).then((res) => res.json());
+		console.log('fetchPostUpdatePosition res', res);
+		return res;
+	}
+
+	async function fetchPostNearbyPlayers(userName, password, lon, lat, distance) {
+		console.log('fetchPostNearbyPlayers', userName, password, lon, lat, distance);
+		const config = postNearbyPlayersConfig(userName, password, lon, lat, distance)
+		const res = await fetch(
+			`${SERVER_URL}/gameapi/nearbyplayers`,config).then((res) => res.json());
+		console.log('fetchPostNearbyPlayers, res', res);
 		return res;
 	}
 
@@ -56,6 +90,7 @@ ServerFacade = () => {
 
 	return {
 		fetchPostUpdatePosition,
+		fetchPostNearbyPlayers,
 		fetchGameArea,
 		isUserInArea
 	};

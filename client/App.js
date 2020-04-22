@@ -31,9 +31,11 @@ export default (App = () => {
 	const [ position, setPosition ] = useState({ latitude: null, longitude: null });
 	const [ errorMessage, setErrorMessage ] = useState(null);
 	const [ gameArea, setGameArea ] = useState([]);
+	const [ players, setPlayers ] = useState([]);
 	const [ region, setRegion ] = useState(null);
 	const [ serverIsUp, setServerIsUp ] = useState(false);
 	const [ status, setStatus ] = useState('');
+	const [ distance, setDistance ] = useState(100000);
 	const [ username, setUsername ] = useState('admin');
 	const [ password, setPassword ] = useState('secret');
 	const [ showLoginModal, setShowLoginModal ] = useState(false);
@@ -63,10 +65,8 @@ export default (App = () => {
 	};
 
 	const getGameArea = async () => {
-		//Fetch gameArea via the facade, and call this method from within (top) useEffect
 		try {
 			const area = await facade.fetchGameArea(username, password);
-			// console.log('area', area);
 			setGameArea(area);
 			setServerIsUp(true);
 		} catch (err) {
@@ -74,8 +74,24 @@ export default (App = () => {
 		}
 	};
 
+	const getPlayers = async () => {
+		try {
+			const arrayPlayers = await facade.fetchPostNearbyPlayers(
+				username,
+				password,
+				position.longitude,
+				position.latitude,
+				distance
+			);
+			if (arrayPlayers) setPlayers(arrayPlayers);
+			console.log('arrayPlayers', arrayPlayers);
+			setServerIsUp(true);
+		} catch (err) {
+			setErrorMessage('Could not fetch Players');
+		}
+	};
+
 	getLocationAsync = async () => {
-		//Request permission for users location, get the location and call this method from useEffect
 		try {
 			let { status } = await Location.requestPermissionsAsync();
 			if (status !== 'granted') {
@@ -147,11 +163,12 @@ export default (App = () => {
 			const updated = await facade.fetchPostUpdatePosition(username, password, lon, lat);
 			console.log('updated', updated);
 			const status = await facade.isUserInArea(username, password, lon, lat);
+			getPlayers();
 			showStatusFromServer(setStatus, status);
 			setServerIsUp(true);
 		} catch (err) {
 			console.log('err', err);
-			setErrorMessage('Could not get result from server: ');
+			setErrorMessage('Could not get result from server');
 			setServerIsUp(false);
 		}
 	};
@@ -175,7 +192,6 @@ export default (App = () => {
 					showsTraffic
 					showsBuildings
 				>
-					{/*App MapView.Polygon to show gameArea*/}
 					{serverIsUp && (
 						<MapView.Polygon
 							coordinates={gameArea}
@@ -185,12 +201,24 @@ export default (App = () => {
 						/>
 					)}
 
-					{/*App MapView.Marker to show users current position*/}
 					<MapView.Marker
-						title="mig"
-						pinColor="yellow"
+						key="mig"
 						coordinate={{ longitude: position.longitude, latitude: position.latitude }}
-					/>
+					>
+						<Text>me</Text>
+					</MapView.Marker>
+					{Array.isArray(players) &&
+						players.length > 0 &&
+						players.map((player) => {
+							return (
+								<MapView.Marker
+									key={player.userName}
+									coordinate={{ longitude: player.lon, latitude: player.lat }}
+								>
+									<Text>{player.userName}</Text>
+								</MapView.Marker>
+							);
+						})}
 				</MapView>
 			)}
 
@@ -201,9 +229,9 @@ export default (App = () => {
 			<Text style={{ flex: 1, textAlign: 'center' }}>{info}</Text>
 			<Text style={{ flex: 1, textAlign: 'center' }}>{err}</Text>
 
-			<MyButton style={{ flex: 2 }} onPressButton={sendRealPosToServer} txt="Upload real Position" />
+			<MyButton style={{ flex: 2 }} onPressButton={sendRealPosToServer} txt="Upload Position and see other players" />
 
-			<MyButton style={{ flex: 2 }} onPressButton={() => onCenterGameArea()} txt="Show Game Area" />
+			<MyButton style={{ flex: 2 }} onPressButton={onCenterGameArea} txt="Show Game Area" />
 
 			<View style={{ flexDirection: 'row', justifyContent: 'center' }}>
 				<MyButton
