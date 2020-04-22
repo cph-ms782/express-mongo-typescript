@@ -1,6 +1,5 @@
 import { SERVER_URL } from './settings';
 import base64 from 'react-native-base64';
-require('dotenv').config({ path: path.join(process.cwd(), '.env') })
 
 const config = (user, password) => {
 	let encodedAuth = base64.encode(user + ':' + password);

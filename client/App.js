@@ -36,7 +36,7 @@ export default (App = () => {
 	const [ serverIsUp, setServerIsUp ] = useState(false);
 	const [ status, setStatus ] = useState('');
 	const [ distance, setDistance ] = useState(100000);
-	const [ username, setUsername ] = useState('admin');
+	const [ username, setUsername ] = useState('t1');
 	const [ password, setPassword ] = useState('secret');
 	const [ showLoginModal, setShowLoginModal ] = useState(false);
 	const [ showAboutModal, setShowAboutModal ] = useState(false);
@@ -160,8 +160,8 @@ export default (App = () => {
 		const lon = position.longitude;
 		try {
 			console.log('test', username, password, lon, lat);
-			const updated = await facade.fetchPostUpdatePosition(username, password, lon, lat);
-			console.log('updated', updated);
+			// const updated = await facade.fetchPostUpdatePosition(username, password, lon, lat);
+			// console.log('updated', updated);
 			const status = await facade.isUserInArea(username, password, lon, lat);
 			getPlayers();
 			showStatusFromServer(setStatus, status);
