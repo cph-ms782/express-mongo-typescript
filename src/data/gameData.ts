@@ -33,6 +33,7 @@ export const gameArea: any = {
       ]
     ]
   }
+  
 export const players: any[] = [
 {
   "type": "Feature",

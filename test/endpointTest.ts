@@ -35,6 +35,7 @@ const authConfig = () => {
       'Authorization': userAuth,
     },
   }
+  console.log("userAuth", userAuth)
   return config
 }
 

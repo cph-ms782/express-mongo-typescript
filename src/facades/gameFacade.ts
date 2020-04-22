@@ -284,7 +284,8 @@ export default class GameFacade {
     static async pointInPolygon(point: any, polygon: any): Promise<any> {
         const inside = gju.pointInPolygon(point, {
             type: 'Polygon',
-            coordinates: polygon.features[0].geometry.coordinates
+            coordinates: polygon.coordinates
+            // coordinates: polygon.features[0].geometry.coordinates
         });
         return inside;
     }

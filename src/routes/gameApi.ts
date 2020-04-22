@@ -28,12 +28,12 @@ interface IPolygonForClient {
 
 const polygonForClient: IPolygonForClient = {};
 polygonForClient.coordinates = gameArea.coordinates[0].map(point => {
-  return {latitude: point[1],longitude: point[0]}
+    return { latitude: point[1], longitude: point[0] }
 })
 
 //Returns a polygon, representing the gameArea
-router.get("/gamearea",(req,res)=>{
-  res.json(polygonForClient);
+router.get("/gamearea", (req, res) => {
+    res.json(polygonForClient);
 });
 
 /**
@@ -65,14 +65,15 @@ router.get('/findnearbyplayers/:lon/:lat/:rad', async (req: any, res: any, next:
  */
 router.post('/nearbyplayers', async (req: any, res: any, next: any) => {
     try {
-        const foundPlayers: any[] = await gameFacade.nearbyPlayers(
+        const foundPlayer: any[] = await gameFacade.nearbyPlayers(
             req.body.userName,
             req.body.password,
             req.body.lon,
             req.body.lat,
             req.body.distance
         );
-        return res.json(foundPlayers);
+        console.log("foundPlayer", foundPlayer)
+        return res.json(foundPlayer);
     } catch (err) {
         next(err);
     }
@@ -82,12 +83,14 @@ router.post('/nearbyplayers', async (req: any, res: any, next: any) => {
  * 
  */
 router.post('/updateposition', async (req: any, res: any, next: any) => {
+    console.log("updateposition")
     try {
         const foundPosition: any[] = await gameFacade.updateLocation(
             req.body.userName,
             req.body.lon,
             req.body.lat,
         );
+        console.log("foundPosition", foundPosition)
         return res.json(foundPosition);
     } catch (err) {
         next(err);
