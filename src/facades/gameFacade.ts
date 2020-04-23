@@ -195,7 +195,7 @@ export default class GameFacade {
             if (post === null) {
                 throw new ApiError("Post not reached", 400);
             }
-            return { postId: post._id, task: post.task.text, isUrl: post.task.isUrl };
+            return { postId: post._id, task: post.task.text, solution: post.taskSolution, isUrl: post.task.isUrl };
         } catch (err) {
             throw err;
         }

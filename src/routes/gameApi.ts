@@ -7,8 +7,8 @@ import authMiddleware from "../middlewares/basic-auth";
 import * as mongo from "mongodb";
 import setup from "../config/setupDB";
 const MongoClient = mongo.MongoClient;
-import { gameArea } from "../data/gameData";
-import { players } from "../data/gameData";
+import { gameArea } from "../data/gameData_bakken";
+import { players } from "../data/gameData_bakken";
 import IPost from "../interfaces/Post";
 
 const USE_AUTHENTICATION: boolean = Boolean(process.env.USE_AUTHENTICATION);

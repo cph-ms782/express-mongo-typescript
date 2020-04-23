@@ -109,6 +109,7 @@ describe("Verify the GameFacade", () => {
       const postFound = await GameFacade.getPostIfReached("Post1", 12.49, 55.77)
       expect(postFound.postId).to.be.equal("Post1")
       expect(postFound.task).to.be.equal("2+5")
+      expect(postFound.solution).to.be.equal("7")
     })
 
     /**
