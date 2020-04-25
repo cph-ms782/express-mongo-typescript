@@ -369,7 +369,8 @@ export default (App = () => {
 			<Modal visible={showLoginModal} animationType="slide">
 				<View style={styles.inputContainer}>
 						<Text style={{ textAlign: 'center' }}>Mulige brugere alle med kodeordet secret</Text>
-						<Text style={{ textAlign: 'center' }}>bettina, esther, isabel, martin, peter</Text>
+						<Text style={{ textAlign: 'center' }}>t1, t2, t3 og andre.</Text>
+						<Text style={{ textAlign: 'center' }}>t1-3 er permanente</Text>
 						<Text></Text>
 					<TextInput
 						placeholder="Username"
