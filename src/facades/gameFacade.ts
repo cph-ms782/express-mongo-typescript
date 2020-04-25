@@ -2,6 +2,7 @@ const debug = require("debug")("game-project");
 const path = require('path')
 require('dotenv').config({ path: path.join(process.cwd(), '.env') })
 import gju from 'geojson-utils';
+import currentDateTime from '../utils/currentDate';
 import * as mongo from "mongodb"
 import UserFacade from "./userFacadeWithDB"
 import { ApiError } from "../errors/apiError";
@@ -149,8 +150,10 @@ export default class GameFacade {
      * @param position 
      */
     static async findAndUpdateUser(userName: string, position: IPosition): Promise<boolean> {
+        const dt = currentDateTime();
+        console.log("datetime", dt)
         const found: any = await positionCollection.findOneAndUpdate(
-            { userName },
+            { userName, lastUpdated: dt },
             { $set: {location: position } },
             { upsert: true, returnOriginal: false },
             function (err, doc) {
