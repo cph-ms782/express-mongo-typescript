@@ -314,7 +314,7 @@ export default (App = () => {
 				onPressButton={sendRealPosToServer}
 				txt="Upload Position and see other players"
 			/> */}
-			<Text>Position uploaded every 30 seconds</Text>
+			<Text style={{textAlign:'center'}} >Position uploaded every 30 seconds</Text>
 			<MyButton style={{ flex: 2 }} onPressButton={onCenterGameArea} txt="Show Game Area" />
 
 			<View style={{ flexDirection: 'row', justifyContent: 'center' }}>
@@ -368,8 +368,8 @@ export default (App = () => {
 			</Modal>
 			<Modal visible={showLoginModal} animationType="slide">
 				<View style={styles.inputContainer}>
-						<Text>Mulige brugere alle med kodeordet secret</Text>
-						<Text>bettina, esther, isabel, martin, peter</Text>
+						<Text style={{ textAlign: 'center' }}>Mulige brugere alle med kodeordet secret</Text>
+						<Text style={{ textAlign: 'center' }}>bettina, esther, isabel, martin, peter</Text>
 						<Text></Text>
 					<TextInput
 						placeholder="Username"
