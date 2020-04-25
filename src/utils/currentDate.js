@@ -33,7 +33,7 @@ const currentDateTime = () => {
 	// console.log('seconds', seconds);
 
 	const dt =
-		String(currentdate.getFullYear()) +
+		new Date((currentdate.getFullYear()) +
 		'-' +
 		month +
 		'-' +
@@ -43,7 +43,7 @@ const currentDateTime = () => {
 		minutes+
 		':' +
 		seconds +
-		"+00:00";
+		"Z");
 	console.log("current datetime: ", dt);
 	return dt;
 };
