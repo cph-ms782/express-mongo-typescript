@@ -36,10 +36,13 @@ export default (App = () => {
 	const [ serverIsUp, setServerIsUp ] = useState(false);
 	const [ status, setStatus ] = useState('');
 	const [ distance, setDistance ] = useState(100000);
-	const [ username, setUsername ] = useState('t1');
+	const [ username, setUsername ] = useState('martin');
 	const [ password, setPassword ] = useState('secret');
-	const [ showLoginModal, setShowLoginModal ] = useState(false);
+	const [ nextPostID, setNextPostID ] = useState('Post3');
+	const [ post, setPost ] = useState({ postID: 'Post3', task: '', solution: '', isUrl: false });
+	const [ showPostModal, setShowPostModal ] = useState(false);
 	const [ showAboutModal, setShowAboutModal ] = useState(false);
+	const [ showLoginModal, setShowLoginModal ] = useState(false);
 	let mapRef = useRef(null);
 
 	useEffect(() => {
@@ -48,6 +51,20 @@ export default (App = () => {
 
 	useEffect(() => {
 		getLocationAsync();
+		sendRealPosToServer();
+	}, []);
+
+	useEffect(() => {
+		const interval = setInterval(() => {
+			// getLocationAsync();
+			sendRealPosToServer();
+		}, 30000);
+		return () => clearInterval(interval);
+	}, []);
+
+	useEffect(() => {
+		const interval = setInterval(() => {}, 10000);
+		return () => clearInterval(interval);
 	}, []);
 
 	const userInputHandler = (eventText) => {
@@ -75,6 +92,8 @@ export default (App = () => {
 	};
 
 	const getPlayers = async () => {
+		console.log('getPlayers');
+		console.log('getPlayers position.longitude, position.latitude', position.longitude, position.latitude);
 		try {
 			const arrayPlayers = await facade.fetchPostNearbyPlayers(
 				username,
@@ -86,8 +105,31 @@ export default (App = () => {
 			if (arrayPlayers) setPlayers(arrayPlayers);
 			console.log('arrayPlayers', arrayPlayers);
 			setServerIsUp(true);
+			setErrorMessage('');
 		} catch (err) {
+			setServerIsUp(false);
 			setErrorMessage('Could not fetch Players');
+		}
+	};
+
+	const checkPosts = async () => {
+		console.log('checkPosts');
+		console.log('checkPosts position.longitude, position.latitude', position.longitude, position.latitude);
+		try {
+			const postOrNot = await facade.fetchPostGetpostifreached(post, position.longitude, position.latitude);
+			console.log('postOrNot', postOrNot);
+			setNextPostID('Post4');
+			console.log('next PostId: ', nextPostID);
+			setPost(...postOrNot);
+			console.log('post reached: ', post);
+			if (post.task !== '') {
+				setShowPostModal(true);
+			}
+			setServerIsUp(true);
+			setErrorMessage('');
+		} catch (err) {
+			setServerIsUp(false);
+			setErrorMessage('Could not fetch Post');
 		}
 	};
 
@@ -104,17 +146,25 @@ export default (App = () => {
 			const lat = location.coords.latitude;
 			const lon = location.coords.longitude;
 			setPosition({ latitude: lat, longitude: lon });
-
+			
+			const LATITUD_DELTA=0.0922;
+			
 			setRegion({
 				latitude: location.coords.latitude,
 				longitude: location.coords.longitude,
-				latitudeDelta: 0.0722,
-				longitudeDelta: 0.0321
+				latitudeDelta: 0.0922,
+				longitudeDelta: 0.04
 			});
 		} catch (err) {
 			console.log('error', err);
 		}
 	};
+
+	onMapRegionChange = async (event) => {
+		// console.log('onMapRegionChange');
+		// console.log("event", event)
+		setRegion({...event})
+	}
 
 	/*
   When a press is done on the map, coordinates (lat,lon) are provided via the event object
@@ -126,45 +176,73 @@ export default (App = () => {
 		console.log('lat lon', lat, lon);
 
 		try {
+			
+			// setRegion({
+			// 	latitude: location.coords.latitude,
+			// 	longitude: location.coords.longitude,
+			// 	latitudeDelta: LATITUD_DELTA,
+			// 	longitudeDelta: LONGITUDE_DELTA
+			// });
 			const status = await facade.isUserInArea(username, password, lon, lat);
 			console.log('status', status);
 			showStatusFromServer(setStatus, status);
+			setErrorMessage('');
+			setServerIsUp(true);
 		} catch (err) {
-			Alert.alert('Error', 'Server could not be reached ' + err);
+			setErrorMessage('Server could not be reached');
 			setServerIsUp(false);
 		}
 	};
 
-	onCenterGameArea = () => {
-		// (RED) Center map around the gameArea fetched from the backend
-		console.log('test, oncenter');
+	onCenterGameArea = async () => {
+		try{
 
-		//Hardcoded, should be calculated as center of polygon received from server
-		const latitude = 55.777055745928664;
-		const longitude = 12.55897432565689;
-		mapRef.current.animateToRegion(
-			{
-				latitude,
-				longitude,
-				latitudeDelta: 0.002,
-				longitudeDelta: 0.04
-			},
-			1000
-		);
+			// (RED) Center map around the gameArea fetched from the backend
+			console.log('test, oncenter');
+			
+			//Hardcoded, should be calculated as center of polygon received from server
+			let location = await Location.getCurrentPositionAsync({});
+			console.log('onCenterGameArea, location', location);
+
+			const latitude =  location.coords.latitude;
+			const longitude =  location.coords.longitude;
+			mapRef.current.animateToRegion(
+				{
+					latitude,
+					longitude,
+					latitudeDelta: 0.002,
+					longitudeDelta: 0.04
+				},
+				1000
+				);
+				setErrorMessage('');
+				setServerIsUp(true);
+			} catch (err) {
+				setErrorMessage('Server could not be reached');
+				setServerIsUp(false);
+			}
 	};
 
 	sendRealPosToServer = async () => {
 		//Upload users current position to the isuserinarea endpoint and present result
-		console.log('test, realposition');
-		const lat = position.latitude;
-		const lon = position.longitude;
+		console.log('sendRealPosToServer');
 		try {
-			console.log('test', username, password, lon, lat);
-			// const updated = await facade.fetchPostUpdatePosition(username, password, lon, lat);
-			// console.log('updated', updated);
-			const status = await facade.isUserInArea(username, password, lon, lat);
+			let location = await Location.getCurrentPositionAsync({});
+			console.log('sendRealPosToServer, location', location);
+			const lat = location.coords.latitude;
+			const lon = location.coords.longitude;
+
+			console.log('sendRealPosToServer', username, password, lon, lat);
+
+			const updated = await facade.fetchPostUpdatePosition(username, password, lon, lat);
+			console.log('updated', updated);
+
 			getPlayers();
+			checkPosts();
+
+			const status = await facade.isUserInArea(username, password, lon, lat);
 			showStatusFromServer(setStatus, status);
+			setErrorMessage('');
 			setServerIsUp(true);
 		} catch (err) {
 			console.log('err', err);
@@ -185,12 +263,13 @@ export default (App = () => {
 					ref={mapRef}
 					style={{ flex: 14 }}
 					onPress={onMapPress}
-					mapType="standard"
+					mapType="hybrid"
 					region={region}
 					showsUserLocation
 					showsCompass
 					showsTraffic
 					showsBuildings
+					onRegionChangeComplete={onMapRegionChange}
 				>
 					{serverIsUp && (
 						<MapView.Polygon
@@ -207,6 +286,7 @@ export default (App = () => {
 					>
 						<Text>me</Text>
 					</MapView.Marker>
+
 					{Array.isArray(players) &&
 						players.length > 0 &&
 						players.map((player) => {
@@ -229,8 +309,12 @@ export default (App = () => {
 			<Text style={{ flex: 1, textAlign: 'center' }}>{info}</Text>
 			<Text style={{ flex: 1, textAlign: 'center' }}>{err}</Text>
 
-			<MyButton style={{ flex: 2 }} onPressButton={sendRealPosToServer} txt="Upload Position and see other players" />
-
+			{/* <MyButton
+				style={{ flex: 2 }}
+				onPressButton={sendRealPosToServer}
+				txt="Upload Position and see other players"
+			/> */}
+			<Text>Position uploaded every 30 seconds</Text>
 			<MyButton style={{ flex: 2 }} onPressButton={onCenterGameArea} txt="Show Game Area" />
 
 			<View style={{ flexDirection: 'row', justifyContent: 'center' }}>
@@ -246,6 +330,27 @@ export default (App = () => {
 				/>
 			</View>
 
+			<Modal visible={showPostModal} animationType="slide">
+				<View style={styles.inputContainer}>
+					<TextInput
+						placeholder="Username"
+						style={styles.input}
+						onChangeText={userInputHandler}
+						value={username}
+						autoFocus={true}
+					/>
+					<View style={styles.buttonContainer}>
+						<View style={styles.button}>
+							<Button
+								title="ANSWER"
+								onPress={() => {
+									setShowPostModal(false);
+								}}
+							/>
+						</View>
+					</View>
+				</View>
+			</Modal>
 			<Modal visible={showAboutModal} animationType="slide">
 				<View style={styles.button}>
 					<Text style={styles.aboutText}>cph-ms782</Text>
@@ -263,6 +368,9 @@ export default (App = () => {
 			</Modal>
 			<Modal visible={showLoginModal} animationType="slide">
 				<View style={styles.inputContainer}>
+						<Text>Mulige brugere alle med kodeordet secret</Text>
+						<Text>bettina, esther, isabel, martin, peter</Text>
+						<Text></Text>
 					<TextInput
 						placeholder="Username"
 						style={styles.input}

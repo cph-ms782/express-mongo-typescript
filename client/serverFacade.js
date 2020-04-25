@@ -50,6 +50,22 @@ const postNearbyPlayersConfig = (userName, password, lon, lat, distance) => {
 	};
 	return headerBody;
 };
+const getpostifreached = (postId, lon, lat) => {
+	let encodedAuth = base64.encode(userName + ':' + password);
+
+	const headerBody = {
+		method: 'POST',
+		headers: {
+			"Authorization": 'Basic ' + encodedAuth,
+			"Content-Type": "application/json",
+			"Accept": "application/json",
+		},
+		body: JSON.stringify({
+			postId, lon, lat
+		})
+	};
+	return headerBody;
+};
 
 ServerFacade = () => {
 	/**
@@ -75,6 +91,24 @@ ServerFacade = () => {
 		return res;
 	}
 
+	async function fetchPostNearbyPlayers(userName, password, lon, lat, distance) {
+		console.log('fetchPostNearbyPlayers', userName, password, lon, lat, distance);
+		const config = postNearbyPlayersConfig(userName, password, lon, lat, distance)
+		const res = await fetch(
+			`${SERVER_URL}/gameapi/nearbyplayers`,config).then((res) => res.json());
+		console.log('fetchPostNearbyPlayers, res', res);
+		return res;
+	}
+
+	async function fetchPostGetpostifreached(postId, lon, lat) {
+		console.log('fetchPostGetpostifreached', postId, lon, lat);
+		const config = getpostifreached(postId, lon, lat)
+		const res = await fetch(
+			`${SERVER_URL}/gameapi/getpostifreached`,config).then((res) => res.json());
+		console.log('fetchPostGetpostifreached, res', res);
+		return res;
+	}
+
 	async function fetchGameArea(user, password) {
 		const res = await fetch(`${SERVER_URL}/gameapi/gamearea`, config(user, password)).then((res) => res.json());
 		return res.coordinates;
@@ -91,6 +125,7 @@ ServerFacade = () => {
 	return {
 		fetchPostUpdatePosition,
 		fetchPostNearbyPlayers,
+		fetchPostGetpostifreached,
 		fetchGameArea,
 		isUserInArea
 	};
