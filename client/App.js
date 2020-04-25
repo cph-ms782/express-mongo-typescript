@@ -284,7 +284,7 @@ export default (App = () => {
 						key="mig"
 						coordinate={{ longitude: position.longitude, latitude: position.latitude }}
 					>
-						<Text>me</Text>
+						<Text style={{color: "white", paddingBottom:9}}>me</Text>
 					</MapView.Marker>
 
 					{Array.isArray(players) &&
@@ -295,7 +295,7 @@ export default (App = () => {
 									key={player.userName}
 									coordinate={{ longitude: player.lon, latitude: player.lat }}
 								>
-									<Text>{player.userName}</Text>
+									<Text style={{color: "yellow"}}>{player.userName}</Text>
 								</MapView.Marker>
 							);
 						})}
@@ -314,7 +314,7 @@ export default (App = () => {
 				onPressButton={sendRealPosToServer}
 				txt="Upload Position and see other players"
 			/> */}
-			<Text style={{textAlign:'center'}} >Position uploaded every 30 seconds</Text>
+			<Text style={{ flex: 1, textAlign: 'center', fontWeight: 'bold' }} >Position uploaded every 30 seconds</Text>
 			<MyButton style={{ flex: 2 }} onPressButton={onCenterGameArea} txt="Show Game Area" />
 
 			<View style={{ flexDirection: 'row', justifyContent: 'center' }}>

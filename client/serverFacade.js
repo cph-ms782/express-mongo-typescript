@@ -87,16 +87,7 @@ ServerFacade = () => {
 		const config = postNearbyPlayersConfig(userName, password, lon, lat, distance)
 		const res = await fetch(
 			`${SERVER_URL}/gameapi/nearbyplayers`,config).then((res) => res.json());
-		console.log('fetchPostNearbyPlayers, res', res);
-		return res;
-	}
-
-	async function fetchPostNearbyPlayers(userName, password, lon, lat, distance) {
-		console.log('fetchPostNearbyPlayers', userName, password, lon, lat, distance);
-		const config = postNearbyPlayersConfig(userName, password, lon, lat, distance)
-		const res = await fetch(
-			`${SERVER_URL}/gameapi/nearbyplayers`,config).then((res) => res.json());
-		console.log('fetchPostNearbyPlayers, res', res);
+		// console.log('fetchPostNearbyPlayers, res', res);
 		return res;
 	}
 
