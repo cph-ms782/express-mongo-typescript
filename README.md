@@ -53,10 +53,11 @@ Man kan få adgang til device features direkte i javascript koden. F.eks. for at
 [*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/0ce182e4bf3586ce7aa90883beef2f1f76babaa9/client/App.js#L138)
 
 #### Explain and demonstrate a React Native Client that uses geo-components (Location, MapView, etc.)
-
+Klienten indhenter oplysninger om devicens lokation, som den derefter opretter et regionsobject, som Komponenten MapView bruger til at vise dette område.
 
 #### Demonstrate both server and client-side, of the geo-related parts of your implementation of the ongoing semester case.
-
+Deployet Client:  https://expo.io/@joghur/team-finder
+Deployet Backend: https://express1.sandersolutions.dk/  "user" er admin og det sædvanlige kodeord
 
 ## Period-2
 
