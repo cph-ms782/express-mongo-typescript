@@ -153,8 +153,8 @@ export default class GameFacade {
         const dt = currentDateTime();
         console.log("datetime", dt)
         const found: any = await positionCollection.findOneAndUpdate(
-            { userName, lastUpdated: dt },
-            { $set: {location: position } },
+            { userName },
+            { $set: {location: position, lastUpdated: dt } },
             { upsert: true, returnOriginal: false },
             function (err, doc) {
                 if (err) {
