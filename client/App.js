@@ -103,7 +103,7 @@ export default (App = () => {
 				distance
 			);
 			if (arrayPlayers) setPlayers(arrayPlayers);
-			console.log('arrayPlayers', arrayPlayers);
+			// console.log('arrayPlayers', arrayPlayers);
 			setServerIsUp(true);
 			setErrorMessage('');
 		} catch (err) {

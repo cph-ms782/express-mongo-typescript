@@ -1,6 +1,12 @@
 cph-ms782, Martin Bøgh Sander-Thomsen
 
 # Fullstack Javascript
+This repo is backend and frontend for a geolocation game.  
+**Backend**: nodejs:  
+**Frontend**: React Native client (is in client folder [here](./client/))  
+
+## Period-3
+This repo is React Native client is in
 
 ## Period-2
 
