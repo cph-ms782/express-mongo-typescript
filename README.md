@@ -1,12 +1,62 @@
 cph-ms782, Martin Bøgh Sander-Thomsen
 
 # Fullstack Javascript
-This repo is backend and frontend for a geolocation game.  
-**Backend**: nodejs:  
+This repo is backend and frontend for a geolocation game.
+
+**Backend**: nodejs project:  
 **Frontend**: React Native client (is in client folder [here](./client/))  
 
-## Period-3
-This repo is React Native client is in
+## Period-3  
+### Android/IOS-Development with React native  
+#### Explain Pros & Cons with React Native + Expo used to implement a Mobile App for Android and IOS, compared to using the Native Tools/languages for the two platforms.
+**Pros:**
+
+-   Det er lettere at sætte op og køre Expo end "normal" React Native, pga alle de værktøjer der er udviklet.
+-    Tid fra kode til deplyoment er meget kort.
+-    Man kan forholdsvist let udgive for Apple uden at skulle betale abonnement for at være på appstore.
+
+**Cons:**
+
+-   Man er begrænset til det komponenter Expo har valgt.
+
+#### What is meant by the React Native Paradigm "Learn once, write anywhere" compared to for example the original (now dead) idea with Java "Write Once, run everywhere".
+Man lærer at skrive react kode og dette kan bruges både til web (reactjs), som mobil app (react native) og evt. som desktop app (electron). Samme kode kan dog ikke bruges 100% alle steder. Hos java skulle samme kode køre alle steder.
+
+#### In React Native, which parts of your code gets compiled to Native Code (Widgets) and which parts do NOT?
+Det der står i return() blokken i hver component. Resten forbliver javascript/typescript.
+
+#### Explain the basic building block in a React Native Application and the difference(s) between a React Application and a React Native App.
+React native opfører sig og ligner reactjs, men i return() blokken er komponenterne ikke de samme som reactjs. Der er f.eks. <View> i stedet for <div>
+
+#### Explain and demonstrate ways to handle User Input in a React Native Application
+Ved hjælp af komponenten <TextInput>
+[*Visual Code* linie 374](./client/App.js) -
+[*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/0ce182e4bf3586ce7aa90883beef2f1f76babaa9/client/App.js#L374)
+
+#### Explain and demonstrate how to handle state in a React Native Application
+Det gøres med hooks som i reactjs
+[*Visual Code* linie 31](./client/App.js) -
+[*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/0ce182e4bf3586ce7aa90883beef2f1f76babaa9/client/App.js#L31)
+
+
+#### Explain and demonstrate how to communicate with external servers, in a React Native Application
+Det gøres ved hjælp af fetch kald.
+[*Visual Code* linie 75](./client/serverFacade.js) -
+[*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/0ce182e4bf3586ce7aa90883beef2f1f76babaa9/client/serverFacade.js#L75)
+
+#### Explain and Demonstrate ways to debug a React Native Application
+Native kan debugges i Visual Code ved at se hvad der printes i konsolen og i Android studio ved at steppe igennem koden. Kan fremprovokeres ved i en mobil emulator at trykke Control-M og derefter vælge debugging
+
+#### Explain and demonstrate how to use Native Device Features in a React Native/Expo app.
+Man kan få adgang til device features direkte i javascript koden. F.eks. for at få fat i locationen (enten grov (kun wifi lokation) eller fin (GPS lokation)) ved at skrive følgende kommando `Location.getCurrentPositionAsync({})`. Før dette skal man dog have spurgt om lov: `Location.requestPermissionsAsync()`
+[*Visual Code* linie 144 + 138](./client/App.js) -
+[*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/0ce182e4bf3586ce7aa90883beef2f1f76babaa9/client/App.js#L138)
+
+#### Explain and demonstrate a React Native Client that uses geo-components (Location, MapView, etc.)
+
+
+#### Demonstrate both server and client-side, of the geo-related parts of your implementation of the ongoing semester case.
+
 
 ## Period-2
 
