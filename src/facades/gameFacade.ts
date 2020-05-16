@@ -7,8 +7,11 @@ import * as mongo from "mongodb"
 import UserFacade from "./userFacadeWithDB"
 import { ApiError } from "../errors/apiError";
 import IPosition from '../interfaces/Position';
+import IPolygonForClient from '../interfaces/PolygonForClient';
+import IPolygonForWeb from '../interfaces/PolygonForWeb';
 import IPost from '../interfaces/Post';
 import IPoint from '../interfaces/Point';
+import { gameArea } from "../data/gameData";
 import { POSITION_COLLECTION_NAME, POST_COLLECTION_NAME } from "../config/collectionNames"
 
 let positionCollection: mongo.Collection;
@@ -61,6 +64,32 @@ export default class GameFacade {
         const point = { type: 'Point', coordinates: [longitude, latitude] };
         return point;
     }
+
+    /**
+     * For React Native
+     */
+    static async polygonForClient(): Promise<any> {
+        const polygon: IPolygonForClient = {};
+        polygon.coordinates = gameArea.coordinates[0].map(point => {
+            return { latitude: point[1], longitude: point[0] }
+        })
+        return polygon.coordinates
+    }
+
+    /**
+     * For React Web. graphQL ser ud til ikke bare at ville have et array som svar
+     * men kræver et key-navn til array'et for at virke. Key coordinates sendes med
+     * som svar i denne function i modsætning til ovenstående
+     */
+    static async polygonForWeb(): Promise<any> {
+        const polygon: IPolygonForWeb = {"coordinates":[[]]};
+        polygon.coordinates[0] = gameArea.coordinates[0].map(point => {
+            return  [point[1],point[0]] 
+            // return { latitude: point[1], longitude: point[0] }
+        })
+        return polygon
+    }
+
 
     /**
      * 
@@ -154,7 +183,7 @@ export default class GameFacade {
         console.log("datetime", dt)
         const found: any = await positionCollection.findOneAndUpdate(
             { userName },
-            { $set: {location: position, lastUpdated: dt } },
+            { $set: { location: position, lastUpdated: dt } },
             { upsert: true, returnOriginal: false },
             function (err, doc) {
                 if (err) {
@@ -221,7 +250,7 @@ export default class GameFacade {
         try {
             const found: any = await positionCollection.findOneAndUpdate(
                 { userName },
-                { $set: {location: positionGeometry } },
+                { $set: { location: positionGeometry } },
                 { upsert: true, returnOriginal: false },
                 // function (err, doc) {
                 //     if (err) {

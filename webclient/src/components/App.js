@@ -1,3 +1,6 @@
+// npm install react-bootstrap bootstrap
+// npm install react-leaflet leaflet
+
 import React from "react";
 import "../App.css"
 import {
@@ -10,6 +13,7 @@ import {
 import { ApolloProvider } from "@apollo/react-hooks"
 import ApolloClient from "apollo-boost"
 import AddUser from "./AddUser";
+import AllPositions from "./AllPositions";
 import AllUsers from "./AllUsers"
 import FindUser from "./FindUser"
 import Home from "./Home"
@@ -30,6 +34,9 @@ export default function App() {
             <NavLink exact activeClassName="selected" to="/allUsers">All Users</NavLink>
           </li>
           <li>
+            <NavLink exact activeClassName="selected" to="/allPositions">All Positions</NavLink>
+          </li>
+          <li>
             <NavLink exact activeClassName="selected" to="/findUser">Find User</NavLink>
           </li>
           <li>
@@ -47,6 +54,9 @@ export default function App() {
               </Route>
               <Route path="/allUsers">
                 <AllUsers />
+              </Route>
+              <Route path="/allPositions">
+                <AllPositions />
               </Route>
               <Route path="/findUser">
                 <FindUser />

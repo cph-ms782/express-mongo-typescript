@@ -1,37 +1,44 @@
-import React, { useState } from "react";
-import { useLazyQuery } from "@apollo/react-hooks"
-import { gql } from "apollo-boost"
-import AddUser from "./AddUser"
+import React, { useState } from 'react';
+import { useLazyQuery } from '@apollo/react-hooks';
+import { gql } from 'apollo-boost';
+import AddUser from './AddUser';
 
-const GET_USER = gql`
-  query getOneUser($id:ID!){
-  getOneUser(id:$id){
-    name
-    userName
-    role
-  }
-}
-`
+const USER = gql`
+	query user($userName: String!) {
+		user(userName: $userName) {
+			name
+			userName
+			role
+		}
+	}
+`;
 
 export default function FindUser() {
-  const [id, setId] = useState("")
-  const [getUser, { loading, error, data }] = useLazyQuery(GET_USER);
+	const [ userName, setUserName ] = useState('');
+	const [ user, { loading, error, data } ] = useLazyQuery(USER);
 
-  const fetchUser = () => {
-    // if (id === "" || id.length !== 24) {
-    //   return;
-    // }
-    alert(`Find user with id: ${id}`)
-  }
+	const fetchUser = () => {
+		// if (id === "" || id.length !== 24) {
+		//   return;
+		// }
+		user({ variables: {userName} });
+	};
 
-  return (
-    <div>
-      ID:<input type="txt" value={id} onChange={e => { setId(e.target.value) }} />
-      &nbsp; <button onClick={fetchUser}>Find User</button>
-      <br/>
-      <br/>
-
-      <h2>Fetch a user using the provided id</h2>
-
-    </div>)
+	return (
+		<div>
+			Username:<input
+				type="txt"
+				value={userName}
+				onChange={(e) => {
+					setUserName(e.target.value);
+				}}
+			/>
+			&nbsp; <button onClick={fetchUser}>Find User</button>
+			<br />
+			<br />
+			{loading && <h2>Loading...</h2>}
+			{error && <h2>Could not find user...</h2>}
+			{data && <AddUser initialUser={data.user} />}
+		</div>
+	);
 }
