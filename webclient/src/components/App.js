@@ -12,9 +12,8 @@ import {
 
 import { ApolloProvider } from "@apollo/react-hooks"
 import ApolloClient from "apollo-boost"
-import AddUser from "./AddUser";
-import AllPositions from "./AllPositions";
-import AllUsers from "./AllUsers"
+import Geo from "./Geo";
+import Users from "./Users"
 import FindUser from "./FindUser"
 import Home from "./Home"
 
@@ -31,16 +30,10 @@ export default function App() {
             <NavLink exact activeClassName="selected" to="/">Home</NavLink>
           </li>
           <li>
-            <NavLink exact activeClassName="selected" to="/allUsers">All Users</NavLink>
+            <NavLink exact activeClassName="selected" to="/users">Users</NavLink>
           </li>
           <li>
-            <NavLink exact activeClassName="selected" to="/allPositions">All Positions</NavLink>
-          </li>
-          <li>
-            <NavLink exact activeClassName="selected" to="/findUser">Find User</NavLink>
-          </li>
-          <li>
-            <NavLink exact activeClassName="selected" to="/addUser">Add User</NavLink>
+            <NavLink exact activeClassName="selected" to="/geo">Geo</NavLink>
           </li>
         </ul>
 
@@ -52,19 +45,13 @@ export default function App() {
               <Route exact path="/">
                 <Home />
               </Route>
-              <Route path="/allUsers">
-                <AllUsers />
+              <Route path="/users">
+                <Users />
               </Route>
-              <Route path="/allPositions">
-                <AllPositions />
+              <Route path="/geo">
+                <Geo />
               </Route>
-              <Route path="/findUser">
-                <FindUser />
-              </Route>
-              <Route path="/addUser">
-                <AddUser allowEdit={true}/>
-              </Route>
-
+              
             </Switch>
           </div>
         </ApolloProvider>

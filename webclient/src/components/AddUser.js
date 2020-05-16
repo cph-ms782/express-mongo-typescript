@@ -65,13 +65,13 @@ const AddUser = ({ initialUser, allowEdit }) => {
   return (
     <form onSubmit={handleSubmit}>
       <label>
-        Name<br/>
-        <input type="text" readOnly={readOnly} id="name" value={user.name} onChange={handleChange} />
+      UserName <br/>
+        <input readOnly={readOnly} type="text" id="userName" value={user.userName} onChange={handleChange} />
       </label>
       <br />
       <label>
-      UserName <br/>
-        <input readOnly={readOnly} type="text" id="userName" value={user.userName} onChange={handleChange} />
+        Name<br/>
+        <input type="text" readOnly={readOnly} id="name" value={user.name} onChange={handleChange} />
       </label>
       <br />
       {readOnly && <p>Role: {user.role}</p>}
