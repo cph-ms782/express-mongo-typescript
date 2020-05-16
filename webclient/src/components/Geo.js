@@ -21,7 +21,7 @@ export default function All() {
 	if (!data) return <p>No Data from gamearea</p>;
 
 	return (
-		<div style={{ textAlign: 'center' }}>
+		<div>
 			<h2>Gamearea som koordinater</h2>
 			<Table striped bordered hover>
 				<thead>

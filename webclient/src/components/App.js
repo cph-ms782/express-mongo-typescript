@@ -14,7 +14,6 @@ import { ApolloProvider } from "@apollo/react-hooks"
 import ApolloClient from "apollo-boost"
 import Geo from "./Geo";
 import Users from "./Users"
-import FindUser from "./FindUser"
 import Home from "./Home"
 
 const client = new ApolloClient({

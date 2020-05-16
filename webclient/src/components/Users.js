@@ -76,6 +76,7 @@ export default function All() {
 			</button>
 			{showAddUser && <AddUser allowEdit={true} />}
 			{showFindUser && <FindUser />}
+			<br />
 			<Table striped bordered hover>
 				<thead>
 					<tr>
