@@ -5,7 +5,7 @@ This repo is backend and frontend for a geolocation game under development
 
 **Backend**: nodejs project.  
 **Frontend**: React Native client (is in client folder [here](./client/)).  
-**Frontend**: React web client (in webclient folder [here](.webclient)).  
+**Frontend**: React web client (in webclient folder [here](./webclient)).  
 
 ## Period-4
 #### Explain shortly about GraphQL, its purpose and some of its use cases  
