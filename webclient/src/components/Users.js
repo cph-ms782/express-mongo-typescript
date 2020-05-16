@@ -55,7 +55,7 @@ export default function All() {
 	if (!data) return <p>No Data</p>;
 
 	return (
-		<div style={{ textAlign: 'center' }}>
+		<div >
 			<button
 				href="#"
 				onClick={() => {
