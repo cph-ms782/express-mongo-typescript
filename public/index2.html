@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Start Code for FullStack JavaScript</title>
+</head>
+
+<body>
+  <h2>API-documentation for semester project</h2>
+  <a href="/api/dummy">Use Dummy API</a>
+  <ul id="ul"></ul>
+  <button id="btn">Fetch all</button>
+  <button id="btn2">Find nearby 55.776643, 12.568630, Distance 30km</button>
+  <script>
+    const options = {
+      method: "GET",
+      credentials: "same-origin",
+      headers: { "Accept": "application/json" }
+    }
+    document.getElementById("btn").onclick = function () {
+      fetch("/api/users", options).then(res => res.json())
+        .then(data => {
+          const lis = data.map(user => `<li>${user.name}, ${user.userName} </li>`)
+          document.getElementById("ul").innerHTML = lis.join("");
+        })
+    }
+    const options2 = {
+      method: "POST",
+      credentials: "same-origin",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+      },
+      body: JSON.stringify({
+        "userName": "martin",
+        "password": "secret",
+        "lat": 55.900,
+        "lon": 12.539,
+        "distance": 30000
+      })
+    }
+    document.getElementById("btn2").onclick = function () {
+      fetch("/gameapi/nearbyplayers", options2)
+        .then(res => res.json())
+        .then(data => {
+          if (data.length!==0) {
+            const lis = data.map(user => `<li>${user.userName}, lon: ${user.lon}, lat: ${user.lat} </li>`)
+            document.getElementById("ul").innerHTML = lis.join("");
+          } else {
+            document.getElementById("ul").innerHTML = "No data"
+          }
+        })
+    }
+  </script>
+</body>
+
+</html>
