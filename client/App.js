@@ -36,7 +36,7 @@ export default (App = () => {
 	const [ serverIsUp, setServerIsUp ] = useState(false);
 	const [ status, setStatus ] = useState('');
 	const [ distance, setDistance ] = useState(100000);
-	const [ username, setUsername ] = useState('martin');
+	const [ username, setUsername ] = useState('');
 	const [ password, setPassword ] = useState('secret');
 	const [ nextPostID, setNextPostID ] = useState('Post3');
 	const [ post, setPost ] = useState({ postID: 'Post3', task: '', solution: '', isUrl: false });
