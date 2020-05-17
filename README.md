@@ -22,7 +22,56 @@ Underfecthing: er når endpointet sender for lidt data. Det er let for GraphQL k
 
 
 #### Explain shortly about GraphQL Schema Definition Language, and provide a number of examples of schemas you have defined.
+GraphQL Schema Definition Language giver mulighed for at oprette et fast type system, som klienten så kan forholde sig til og duplikere, for at undgå bugs.
 
+Eksempel på schema:
+[*Visual Code* linie 75](./src/routes/graphQLAPI.ts) -
+[*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/0ce182e4bf3586ce7aa90883beef2f1f76babaa9/client/serverFacade.js#L75)
+
+    const schema = buildSchema(`
+
+    // Type definitioner
+    type User {
+    name: String
+    userName: String
+    role: String
+    password: String
+    }
+
+    // Input definitioner. Til mutationer
+    input UserInput {
+    name: String
+    userName: String
+    password: String
+    }
+
+    // Standard Query
+    type Query {
+    user(userName: String): User
+    users : [User]!
+    gamearea: Polygon!
+    }
+
+    // standard Mutation
+    type Mutation {
+    createUser(input: UserInput): String
+    updateUser(input: UserInput): User
+    deleteUser(userName:String!):String
+    }
+
+    // Hvis man vil have kan vil have en variabel uden tilknyttet key-value.
+    scalar Coordinates
+
+    type coordinatesLatLon {
+    latitude: Float!
+    longitude: Float!
+    }
+
+    type Polygon {
+    coordinates: [[Coordinates]!]!
+    }
+
+    `)
 
 #### Provide a number of examples demonstrating data fetching with GraphQL. You should provide examples both running in a Sandbox/playground and examples executed in an Apollo Client
 
@@ -38,21 +87,39 @@ Den gemmer kompleksiteten i f.eks. at hente serveradresse
 
 #### In an Apollo-based React Component, demonstrate how to perform GraphQL Queries, including:
 
-
-#### Explain the purpose of ApolloClient and the ApolloProvider component
-
-
-#### Explain the purpose of the gql-function (imported from graphql-tag)
+ * ##### Explain the purpose of ApolloClient and the ApolloProvider component
 
 
-#### Explain Custom Hooks used by your Client Code
+ * ##### Explain the purpose of the gql-function (imported from graphql-tag)
+gql indeholder den query man er interesseret i at udføre. For queries kan man direkte bruge den query man kan lave i graphiql interfacet. For mutations skal man lægge et ekstra lag på:
+
+    gql`
+	{
+		users {
+			name
+			userName
+			role
+		}
+	}
+    `;
+
+    gql`
+	mutation deleteUser($userName: String!) {
+		deleteUser(userName: $userName)
+	}
+    `;
+
+ * #### Explain Custom Hooks used by your Client Code
+
 **useQuery**. Bruges til at sende gql query'et videre til serveren via apollo.  
-const { loading, error, data, refetch } = useQuery(USERS, { pollInterval: 3000 })
+
+    const { loading, error, data, refetch } = useQuery(USERS, { pollInterval: 3000 })
 
 **useMutation**. Bruges til at sende mutations query til server.
-const [ deleteUser ] = useMutation(DELETE_USER);
 
-#### Explain and demonstrate the caching features built into Apollo Client
+    const [ deleteUser ] = useMutation(DELETE_USER);
+
+ * #### Explain and demonstrate the caching features built into Apollo Client
 
 Send oplysning til server om at slette en bruger og genhent al data fra serveren
 
