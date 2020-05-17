@@ -9,14 +9,14 @@ This repo is backend and frontend for a geolocation game under development
 
 ## Period-4
 #### Explain shortly about GraphQL, its purpose and some of its use cases  
-Text  
-text
+GraphQL er en måde at lave et endpoint, hvor man kan nøjes med et enkelt POST endpoint, modsat REST endpoints der kræver et for hver funktionalitet. GraphQL kan også bygges ovenpå eksisterende REST endpoint, så man ikke behøver at lave om på det hvis man vil udvide eller lave nyt.
 
 #### Explain some of the Server Architectures that can be implemented with a GraphQL backend
 
 
 #### What is meant by the terms over- and under-fetching in relation to REST
-
+Overfetching: REST sender ofte for meget data (for den kan ikke ændre hvad den sender). Det er Overfetching.
+Underfecthing: er når endpointet sender for lidt data. Det er let for GraphQL kun at sende det der er nødvendigt, da man bare i query'et skriver hvad man vil have.
 
 #### Explain shortly about GraphQL’s type system and some of the benefits we get from this
 
@@ -31,10 +31,10 @@ text
 
 
 #### Explain the Concept of a Resolver function, and provide a number of simple examples of resolvers you have implemented in a GraphQL Server.
-
+Resolveren "oversætter" query'et i schemas til kode der kan forståes af
 
 #### Explain the benefits we get from using a library like Apollo-client, compared to using the plain fetch-API
-
+Den gemmer kompleksiteten i f.eks. at hente serveradresse
 
 #### In an Apollo-based React Component, demonstrate how to perform GraphQL Queries, including:
 
@@ -46,16 +46,45 @@ text
 
 
 #### Explain Custom Hooks used by your Client Code
+**useQuery**. Bruges til at sende gql query'et videre til serveren via apollo.  
+const { loading, error, data, refetch } = useQuery(USERS, { pollInterval: 3000 })
 
+**useMutation**. Bruges til at sende mutations query til server.
+const [ deleteUser ] = useMutation(DELETE_USER);
 
 #### Explain and demonstrate the caching features built into Apollo Client
 
+Send oplysning til server om at slette en bruger og genhent al data fra serveren
+
+    deleteUser({ variables: { userName } });
+    refetch();
+
+Send oplysning til server om at slette en bruger og opdater cachen
+
+    deleteUser({
+    variables: { userName },
+    update(cache) {
+      const { users } = cache.readQuery({ query: USERS });
+      const newUsers = users.filter((f) => f.userName !== userName);
+      cache.writeQuery({
+        query: USERS,
+        data: { users: newUsers }
+      });
+    }
+    });
+
 
 #### In an Apollo-based React Component, demonstrate how to perform GraphQL Mutations?
-
+    1. const DELETE_USER = gql`
+	mutation deleteUser($userName: String!) {  
+		deleteUser(userName: $userName)  
+	}
+    `;
+    2. const [ deleteUser ] = useMutation(DELETE_USER);
+    3. deleteUser({ variables: { userName } });
 
 #### Demonstrate and highlight important parts of a “complete” GraphQL-app using Express and MongoDB on the server-side, and Apollo-Client on the client.
-
+Se den deploy'ede version
 
 ## Period-3  
 ### Android/IOS-Development with React native  
