@@ -25,8 +25,8 @@ Underfecthing: er når endpointet sender for lidt data. Det er let for GraphQL k
 GraphQL Schema Definition Language giver mulighed for at oprette et fast type system, som klienten så kan forholde sig til og duplikere, for at undgå bugs.
 
 Eksempel på schema:
-[*Visual Code* linie 75](./src/routes/graphQLAPI.ts) -
-[*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/0ce182e4bf3586ce7aa90883beef2f1f76babaa9/client/serverFacade.js#L75)
+[*Visual Code* linie 25](./src/routes/graphQLAPI.ts) -
+[*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/2f788798e64950497fe3ed33f8aa3a3a70cbf3ab/src/routes/graphQLAPI.ts#L25)
 
     const schema = buildSchema(`
 
