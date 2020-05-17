@@ -12,17 +12,19 @@ This repo is backend and frontend for a geolocation game under development
 GraphQL er en måde at lave et endpoint, hvor man kan nøjes med et enkelt POST endpoint, modsat REST endpoints der kræver et for hver funktionalitet. GraphQL kan også bygges ovenpå eksisterende REST endpoint, så man ikke behøver at lave om på det hvis man vil udvide eller lave nyt.
 
 #### Explain some of the Server Architectures that can be implemented with a GraphQL backend
-
+ * Graphql direkte forbundet med en database
+ * Graphql som forbinder eksisterende (ældre) i et endpoint
+ * En hybrid der forbinder både en database forbindelse og ældre systemer sammen i eet endpoint.
 
 #### What is meant by the terms over- and under-fetching in relation to REST
 Overfetching: REST sender ofte for meget data (for den kan ikke ændre hvad den sender). Det er Overfetching.
 Underfecthing: er når endpointet sender for lidt data. Det er let for GraphQL kun at sende det der er nødvendigt, da man bare i query'et skriver hvad man vil have.
 
 #### Explain shortly about GraphQL’s type system and some of the benefits we get from this
-
+Type systemet giver mulighed for serveren kan oprette en type struktur, som klienten så kan forholde sig til og duplikere, for at undgå bugs.
 
 #### Explain shortly about GraphQL Schema Definition Language, and provide a number of examples of schemas you have defined.
-GraphQL Schema Definition Language giver mulighed for at oprette et fast type system, som klienten så kan forholde sig til og duplikere, for at undgå bugs.
+GraphQL Schema Definition Language har en meget enkel syntax som giver mulighed for at definere et skema meget kortfattet.
 
 Eksempel på schema:
 [*Visual Code* linie 25](./src/routes/graphQLAPI.ts) -
@@ -74,9 +76,14 @@ Eksempel på schema:
     `)
 
 #### Provide a number of examples demonstrating data fetching with GraphQL. You should provide examples both running in a Sandbox/playground and examples executed in an Apollo Client
-
+[graphiql](https://express1.sandersolutions.dk/graphql)  
+delete [*Visual Code* linie 9](./webclient/src/components/Users.js) -
+[*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/97fcb6c86153b67d926f82287cab2c96ac8985f0/webclient/src/components/Users.js#L9)
 
 #### Provide a number of examples demonstrating; creating, updating and deleting with Mutations. You should provide examples both running in a Sandbox/playground and examples executed in an Apollo Client.
+[graphiql](https://express1.sandersolutions.dk/graphql)  
+Create [*Visual Code* linie 14](./webclient/src/components/AddUser.js) -
+[*github*](https://github.com/cph-ms782/express-mongo-typescript/blob/97fcb6c86153b67d926f82287cab2c96ac8985f0/webclient/src/components/AddUser.js#L14)
 
 
 #### Explain the Concept of a Resolver function, and provide a number of simple examples of resolvers you have implemented in a GraphQL Server.
@@ -88,7 +95,7 @@ Den gemmer kompleksiteten i f.eks. at hente serveradresse
 #### In an Apollo-based React Component, demonstrate how to perform GraphQL Queries, including:
 
  * ##### Explain the purpose of ApolloClient and the ApolloProvider component
-
+ApolloProvider giver React componenter adgang til apolloklionten, så de (react komponenterne) kan forbinde med et endpoint.
 
  * ##### Explain the purpose of the gql-function (imported from graphql-tag)
 gql indeholder den query man er interesseret i at udføre. For queries kan man direkte bruge den query man kan lave i graphiql interfacet. For mutations skal man lægge et ekstra lag på:
