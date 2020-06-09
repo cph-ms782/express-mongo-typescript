@@ -4,9 +4,7 @@ import userFacade from "../facades/userFacadeWithDB";
 const router = express.Router();
 import { ApiError } from "../errors/apiError";
 import authMiddleware from "../middlewares/basic-auth";
-import * as mongo from "mongodb";
 import setup from "../config/setupDB";
-const MongoClient = mongo.MongoClient;
 
 const USE_AUTHENTICATION : boolean = Boolean(process.env.USE_AUTHENTICATION);
 
@@ -21,7 +19,7 @@ const USE_AUTHENTICATION : boolean = Boolean(process.env.USE_AUTHENTICATION);
 router.post('/', async function (req, res, next) {
     try {
         let newUser = req.body;
-        newUser.role = "user";  //Even if a hacker tried to "sneak" in his own role, this is what you get
+        newUser.role = "user";
         const status = await userFacade.addUser(newUser)
         res.json({ status })
     } catch (err) {
@@ -92,6 +90,25 @@ router.get('/', async function (req: any, res, next) {
         next(err)
     }
 });
+
+/**
+ * 
+ */
+router.put('/:userName', async function (req: any, res, next) {
+    try {
+        if (USE_AUTHENTICATION) {
+            const role = req.role;
+            if (role != "admin") {
+                throw new ApiError("Not Authorized", 403)
+            }
+        }
+        const user = req.body;
+        const status = await userFacade.changeUser(user)
+        res.json({ status })
+    } catch (err) {
+        next(err);
+    }
+})
 
 /**
  * 

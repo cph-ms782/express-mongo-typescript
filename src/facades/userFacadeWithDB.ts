@@ -3,11 +3,8 @@ require('dotenv').config({ path: path.join(process.cwd(), '.env') })
 import IGameUser from '../interfaces/GameUser';
 import { bryptAsync, bryptCheckAsync } from "../utils/bcrypt-async-helper"
 import * as mongo from "mongodb"
-import setup from "../config/setupDB"
 import { ApiError } from "../errors/apiError"
-import IPosition from '../interfaces/Position';
-import IPoint from '../interfaces/Point';
-import { POSITION_COLLECTION_NAME, USER_COLLECTION_NAME } from "../config/collectionNames"
+import { USER_COLLECTION_NAME } from "../config/collectionNames"
 
 let userCollection: mongo.Collection;
 
@@ -42,7 +39,20 @@ export default class UserFacade {
             if (err.code === 11000) {
                 throw new ApiError("This userName is already taken", 400)
             }
-            //This should probably be logged
+            throw new ApiError(err.errmsg, 400)
+        }
+    }
+
+    static async changeUser(user: IGameUser): Promise<string> {
+        const hash = await bryptAsync(user.password);
+        let changedUser ={ $set: { ...user, password: hash }};
+        try {
+            await userCollection.updateOne(
+                { userName : user.userName },
+                changedUser
+            );
+            return "User was changed";
+        } catch (err) {
             throw new ApiError(err.errmsg, 400)
         }
     }
@@ -86,51 +96,3 @@ export default class UserFacade {
         return status
     }
 }
-
-async function test() {
-    console.log("testing")
-    const client = await setup();
-    await UserFacade.setDatabase(client)
-    await userCollection.deleteMany({})
-    await UserFacade.addUser({ name: "kim", userName: "kim@b.dk", password: "secret", role: "user" })
-    await UserFacade.addUser({ name: "ole", userName: "ole@b.dk", password: "secret", role: "user" })
-
-    // const all = await UserFacade.getAllUsers();
-    // console.log(all)
-
-    // const projection = { _id: 0, role: 0, password: 0 }
-    // const kim = await UserFacade.getUser("kim@b.dk", projection)
-    // console.log(kim)
-
-    // try {
-    //     let status = await UserFacade.deleteUser("kim@b.dk");
-    //     console.log(status)
-    //     status = await UserFacade.deleteUser("xxxx@b.dk");
-    //     console.log("Should not get here")
-    // } catch (err) {
-    //     console.log(err.message)
-    // }
-
-    try {
-        const passwordStatus = await UserFacade.checkUser("kim@b.dk", "secret");
-        console.log("Expects true: ", passwordStatus)
-    } catch (err) {
-        console.log("Should not get here 1", err)
-    }
-
-    try {
-        const passwordStatus = await UserFacade.checkUser("kim@b.dk", "xxxx");
-        console.log("Should not get here ", passwordStatus)
-    } catch (err) {
-        console.log("Should get here with failed 2", err)
-    }
-    try {
-        const passwordStatus = await UserFacade.checkUser("xxxx@b.dk", "secret");
-        console.log("Should not get here")
-    } catch (err) {
-        console.log("Should get here with failed 3", err)
-    }
-    client.close();
-
-}
-// test();

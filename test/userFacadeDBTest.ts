@@ -54,6 +54,24 @@ describe("Verify the UserFacade", () => {
       const jan = await userCollection.findOne({ userName: "jo@b.dk" })
       expect(jan.name).to.be.equal("Jan Olsen")
     } catch (err) {
+      throw err;
+    } finally { }
+  })
+
+  it("Should Change the user dd@b.dk", async () => {
+    const randomName = "Donald Duck" + String(Math.round(Math.random() * 100));
+    const changedUser = { name: randomName, userName: "dd@b.dk", password: "secret", role: "team" }
+    try {
+      const status = await UserFacade.changeUser(changedUser);
+      expect(status).to.be.equal("User was changed")
+
+      if (userCollection === null) {
+        throw new Error("Collection was null")
+      }
+      const team = await userCollection.findOne({ userName: "dd@b.dk" })
+      expect(team.name).to.be.equal(randomName)
+    } catch (err) {
+      throw err;
     } finally { }
   })
 

@@ -3,16 +3,11 @@ import express from "express";
 import userFacade from "../facades/userFacadeWithDB";
 import gameFacade from "../facades/gameFacade";
 const router = express.Router();
-// import { ApiError } from "../errors/apiError";
 import authMiddleware from "../middlewares/basic-auth";
-// import * as mongo from "mongodb";
 import setup from "../config/setupDB";
-// const MongoClient = mongo.MongoClient;
 let graphqlHTTP = require('express-graphql');
 let { buildSchema, GraphQLScalarType } = require('graphql');
 import GameUser from "../interfaces/GameUser";
-import UserInput from "../interfaces/UserInput";
-import { ApiError } from "../errors/apiError";
 
 const USE_AUTHENTICATION: boolean = Boolean(process.env.USE_AUTHENTICATION);
 
@@ -53,33 +48,17 @@ type Query {
     gamearea: Polygon!
 }
 
+
 type Mutation {
     createUser(input: UserInput): String
-    updateUser(input: UserInput): User
+    updateUser(input: UserInput): String
     deleteUser(userName:String!):String
 }
 `)
 
-// findnearbyplayers: String
-// nearbyplayers: TODO
-// isUserInArea(lon:Float!, lat: Float!): TODO
-// updateposition(userName: String!, lon: Float!, lat: Float!): TODO
-
 if (USE_AUTHENTICATION) {
     router.use(authMiddleware)
 }
-
-//Only if we need roles
-// router.use("/", (req: any, res, next) => {
-//     if (USE_AUTHENTICATION) {
-//         const role = req.role;
-//         if (role != "admin") {
-//             throw new ApiError("Not Authorized", 403)
-//         }
-//         next();
-//     }
-// })
-
 
 let root = {
     Coordinates: new GraphQLScalarType({
@@ -126,7 +105,21 @@ let root = {
         }
     },
     updateUser: async ( inp: any) => {
-        //updateUser er ikke lavet i userFacade endnu
+        const { input } = inp;
+        try {
+            const changedUser: GameUser = {
+                name: input.name,
+                userName: input.userName,
+                password: input.password,
+                role: "user"
+            }
+
+            const status = await userFacade.changeUser(changedUser)
+            return status;
+
+        } catch (err) {
+            throw err;
+        }
     },
     deleteUser: async ( { userName }) => {
         try {
@@ -148,9 +141,6 @@ let root = {
     },
 
 };
-// findnearbyplayers: async () =>{
-//     return {msg: "TODO"}
-// }
 
 router.use('/', graphqlHTTP({
     schema: schema,

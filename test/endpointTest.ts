@@ -111,7 +111,7 @@ describe("verify all endpoints", () => {
     expect(result.msg).to.be.equal("Hello api")
   })
 
-  it("Should get three users", async () => {
+  it("Should get four users", async () => {
     const result = await fetch(`${URL}/api/users`, auth).then(r => r.json());
     expect(result.length).to.be.equal(4)
   })
@@ -131,6 +131,24 @@ describe("verify all endpoints", () => {
     const jan = await fetch(`${URL}/api/users/jo@b.dk`, auth).then(r => r.json());
     expect(result.status).to.be.equal("User was added")
     expect(jan.name).to.be.equal("Jan Olsen")
+  })
+
+  it("Should Change the user t2", async () => {
+    const randomName = "Team2" + String(Math.round(Math.random() * 100));
+    const changedUser = { name: randomName, userName: "t2", password: "secret", role: "team" }
+    const config = {
+      method: "PUT",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': userAuth,
+      },
+      body: JSON.stringify(changedUser)
+    }
+    const result = await fetch(`${URL}/api/users/t2`, config).then(r => r.json());
+    const user = await fetch(`${URL}/api/users/t2`, auth).then(r => r.json());
+    expect(result.status).to.be.equal("User was changed")
+    expect(user.name).to.be.equal(randomName)
   })
 
   it("Should find the user t1", async () => {

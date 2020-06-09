@@ -21,7 +21,7 @@ export default function FindUser() {
 		// if (id === "" || id.length !== 24) {
 		//   return;
 		// }
-		user({ variables: {userName} });
+		user({ variables: { userName } });
 	};
 
 	return (
@@ -38,7 +38,7 @@ export default function FindUser() {
 			<br />
 			{loading && <h2>Loading...</h2>}
 			{error && <h2>Could not find user...</h2>}
-			{data && <AddUser initialUser={data.user} />}
+			{data && <AddUser initialUser={data.user} allowEdit={true} allowUpdate={true}/>}
 		</div>
 	);
 }

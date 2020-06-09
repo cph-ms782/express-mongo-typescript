@@ -55,7 +55,7 @@ export default function All() {
 	if (!data) return <p>No Data</p>;
 
 	return (
-		<div >
+		<div>
 			<button
 				href="#"
 				onClick={() => {
@@ -74,7 +74,7 @@ export default function All() {
 			>
 				Find User
 			</button>
-			{showAddUser && <AddUser allowEdit={true} />}
+			{showAddUser && <AddUser allowEdit={true} allowUpdate={false} />}
 			{showFindUser && <FindUser />}
 			<br />
 			<Table striped bordered hover>
