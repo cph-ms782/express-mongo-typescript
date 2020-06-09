@@ -2,13 +2,10 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import {
-	Platform,
 	Text,
 	View,
 	StyleSheet,
-	Dimensions,
 	TouchableHighlight,
-	Alert,
 	Modal,
 	TextInput,
 	Button
@@ -27,7 +24,6 @@ const MyButton = ({ txt, onPressButton }) => {
 };
 
 export default (App = () => {
-	//HOOKS
 	const [ position, setPosition ] = useState({ latitude: null, longitude: null });
 	const [ errorMessage, setErrorMessage ] = useState(null);
 	const [ gameArea, setGameArea ] = useState([]);
@@ -58,14 +54,13 @@ export default (App = () => {
 		const interval = setInterval(() => {
 			// getLocationAsync();
 			sendRealPosToServer();
-		}, 30000);
+		}, 15000);
 		return () => clearInterval(interval);
 	}, []);
 
-	useEffect(() => {
-		const interval = setInterval(() => {}, 10000);
-		return () => clearInterval(interval);
-	}, []);
+	// useEffect(() => {
+
+	// }, []);
 
 	const userInputHandler = (eventText) => {
 		setUsername(eventText);
@@ -142,19 +137,23 @@ export default (App = () => {
 			}
 
 			let location = await Location.getCurrentPositionAsync({});
-			// console.log(location);
-			const lat = location.coords.latitude;
-			const lon = location.coords.longitude;
-			setPosition({ latitude: lat, longitude: lon });
-			
-			const LATITUD_DELTA=0.0922;
-			
-			setRegion({
-				latitude: location.coords.latitude,
-				longitude: location.coords.longitude,
-				latitudeDelta: 0.0922,
-				longitudeDelta: 0.04
-			});
+			if(location){
+				console.log("getLocationAsync location", location);
+				const lat = location.coords.latitude;
+				const lon = location.coords.longitude;
+				setPosition({ latitude: lat, longitude: lon });
+				
+				const LATITUD_DELTA=0.0922;
+				
+				// setRegion({
+				// 	latitude: location.coords.latitude,
+				// 	longitude: location.coords.longitude,
+				// 	latitudeDelta: 0.0922,
+				// 	longitudeDelta: 0.04
+				// });
+			} else{
+				console.log("getLocationAsync location -> null")
+			}
 		} catch (err) {
 			console.log('error', err);
 		}
@@ -177,12 +176,12 @@ export default (App = () => {
 
 		try {
 			
-			// setRegion({
-			// 	latitude: location.coords.latitude,
-			// 	longitude: location.coords.longitude,
-			// 	latitudeDelta: LATITUD_DELTA,
-			// 	longitudeDelta: LONGITUDE_DELTA
-			// });
+			setRegion({
+				latitude: location.coords.latitude,
+				longitude: location.coords.longitude,
+				latitudeDelta: LATITUD_DELTA,
+				longitudeDelta: LONGITUDE_DELTA
+			});
 			const status = await facade.isUserInArea(username, password, lon, lat);
 			console.log('status', status);
 			showStatusFromServer(setStatus, status);
@@ -200,7 +199,7 @@ export default (App = () => {
 			// (RED) Center map around the gameArea fetched from the backend
 			console.log('test, oncenter');
 			
-			//Hardcoded, should be calculated as center of polygon received from server
+			//Hardcoded, should be calculated as cPostenter of polygon received from server
 			let location = await Location.getCurrentPositionAsync({});
 			console.log('onCenterGameArea, location', location);
 
@@ -228,19 +227,32 @@ export default (App = () => {
 		console.log('sendRealPosToServer');
 		try {
 			let location = await Location.getCurrentPositionAsync({});
-			console.log('sendRealPosToServer, location', location);
+			if(location){
+				console.log('sendRealPosToServer location', location);
+			} else{
+				console.log('sendRealPosToServer location - > null', );
+			}
 			const lat = location.coords.latitude;
 			const lon = location.coords.longitude;
 
 			console.log('sendRealPosToServer', username, password, lon, lat);
 
 			const updated = await facade.fetchPostUpdatePosition(username, password, lon, lat);
-			console.log('updated', updated);
+			if(updated){
+				console.log('sendRealPosToServer updated', updated);
+			} else{
+				console.log('sendRealPosToServer updated - > null', );
+			}
 
 			getPlayers();
-			checkPosts();
+			// checkPosts();
 
 			const status = await facade.isUserInArea(username, password, lon, lat);
+			if(status){
+				console.log('sendRealPosToServer status', status);
+			} else{
+				console.log('sendRealPosToServer status - > null', );
+			}
 			showStatusFromServer(setStatus, status);
 			setErrorMessage('');
 			setServerIsUp(true);

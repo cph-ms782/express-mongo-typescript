@@ -78,7 +78,7 @@ ServerFacade = () => {
 			`${SERVER_URL}/gameapi/updateposition`,
 			postConfig(userName, password, lon, lat)
 		).then((res) => res.json());
-		console.log('fetchPostUpdatePosition res', res);
+		// console.log('fetchPostUpdatePosition res', res);
 		return res;
 	}
 
@@ -96,7 +96,7 @@ ServerFacade = () => {
 		const config = getpostifreached(postId, lon, lat)
 		const res = await fetch(
 			`${SERVER_URL}/gameapi/getpostifreached`,config).then((res) => res.json());
-		console.log('fetchPostGetpostifreached, res', res);
+		// console.log('fetchPostGetpostifreached, res', res);
 		return res;
 	}
 
